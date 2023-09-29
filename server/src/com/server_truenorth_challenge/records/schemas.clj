@@ -2,12 +2,8 @@
 
 (def query-params-records
   [:map
-   [:sorting {:optional true}
-    [:map
-     [[:field [:enum "id" "operation-id" "amount" "user-balance" "operation_response"]]
-      [:order [:enum "asc" "desc"]]]]]
-   [:filter {:optional true}
-    [:map
-     [[:field [:enum "id" "operation-id" "amount" "user-balance" "operation_response"]]
-      [:value [:string]]]]]
+   [:sorting-fields {:optional true} [:vector [:enum "id" "operation-id" "amount" "user-balance" "operation-response"]]]
+   [:sorting-order {:optional true} [:enum "asc" "desc"]]
+   [:filter-fields {:optional true} [:vector [:enum "id" "operation-id" "amount" "user-balance" "operation-response"]]]
+   [:filter-values {:optional true} [:vector [:string]]]
    [:search {:optional true} :string]])

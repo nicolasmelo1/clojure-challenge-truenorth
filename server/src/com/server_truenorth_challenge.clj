@@ -8,6 +8,8 @@
             [com.server-truenorth-challenge.worker :as worker]
             [com.server-truenorth-challenge.auth.plugin :as auth]
             [com.server-truenorth-challenge.operations.plugin :as operations]
+            [com.server-truenorth-challenge.records.plugin :as records]
+
             [com.server-truenorth-challenge.schema :as schema]
             [clojure.test :as test]
             [clojure.tools.logging :as log]
@@ -21,6 +23,7 @@
    (biff/authentication-plugin {})
    auth/plugin
    operations/plugin
+   records/plugin
    home/plugin
    schema/plugin
    worker/plugin])

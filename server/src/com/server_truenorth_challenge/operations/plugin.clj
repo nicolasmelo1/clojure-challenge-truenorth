@@ -1,3 +1,3 @@
-(ns com.server-truenorth-challenge.operations.plugin (:require [com.server-truenorth-challenge.operations.routes :as routes]))
+(ns com.server-truenorth-challenge.operations.plugin (:require [com.server-truenorth-challenge.operations.routes :as operations-routes]))
 
-(def plugin {:api-routes [routes/new-operation routes/operations]})
+(def plugin {:api-routes [operations-routes/new-operation operations-routes/operations]})
