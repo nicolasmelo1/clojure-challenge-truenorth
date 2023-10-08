@@ -76,7 +76,6 @@
       (let [schema-formatted (format-schema-for-query-params-validation schema)
             schema-validator ((schema-validator-middleware-factory schema-formatted) handler)
             validation-data (records-utils/query-params-validation query-params query-params-validation-data)]
-        (println "schema-formatted" schema-formatted)
         (if (true? (:is-valid validation-data)) (schema-validator (assoc ctx :query-params (:data validation-data)))
             {:headers {"content-type" "application/json"} :body (:errors validation-data) :status 400})))))
 
@@ -102,5 +101,4 @@
                                    (assoc response :body
                                           {:status (get-status (:status response)) :data (:body response)})
                                    (:body response))]
-      (println (:status response))
       (assoc formated-body-response :headers (assoc (:headers formated-body-response) "content-type" "application/json")))))

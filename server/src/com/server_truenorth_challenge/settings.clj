@@ -4,7 +4,7 @@
 
 (def app-name "Server Truenorth Challenge")
 
-(def jwt-secret (biff/generate-secret 32))
+(def jwt-secret "+kQTk9VfDyxGmfgm3N8fATqkbzOP5dbUkFFQe5Y3JxQ=")
 (def jwt-token-expiration-time 14400) ; 4 hours
 (def jwt-refresh-token-expiration-time 15780000) ; 6 months
 

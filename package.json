@@ -1,0 +1,27 @@
+{
+  "name": "clojure-challenge-truenorth",
+  "version": "0.0.1",
+  "description": " This is the truenorth challenge for a position of working with clojure",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolasmelo1/clojure-challenge-truenorth.git"
+  },
+  "keywords": [
+    "Truenorth",
+    "clojure",
+    "challenge"
+  ],
+  "author": "Nicolas Melo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicolasmelo1/clojure-challenge-truenorth/issues"
+  },
+  "homepage": "https://github.com/nicolasmelo1/clojure-challenge-truenorth#readme",
+  "devDependencies": {
+    "turborepo": "^0.0.1"
+  }
+}
