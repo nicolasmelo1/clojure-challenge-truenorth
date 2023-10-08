@@ -1,1 +1,0 @@
-["^ ","~$users-insert-new-with-username-and-password",["^ ","~:row",7,"~:col",1,"~:fixed-arities",["~#set",[2]],"~:name","^0","~:ns","~$com.server-truenorth-challenge.admin.repository","~:top-ns","^7","~:type","~:fn"],"~:filename","/Users/nicolasmelo/workspace/clojure-challenge-truenorth/server/src/com/server_truenorth_challenge/admin/repository.clj"]
