@@ -10,9 +10,10 @@
   [db directory-location migrations-table-name]
   (let [directory (io/file directory-location)
         files (file-seq directory)
-        applied-migrations (try (set (map :__migrations/name (pg/execute! db [(str "select name from " migrations-table-name)]))) (catch Throwable []))]
+        applied-migrations (try (set (map :__migrations/name (pg/execute! db [(str "select name from " migrations-table-name)]))) (catch Throwable []))
+        formatted-applied-migrations (into [] applied-migrations)]
     (filter #(and (str/includes? (.getName %) ".up.")
-                  (not (contains? applied-migrations (.getName %)))) (sort-by #(.getName %) files))))
+                  (not (utils/check-if-key-exists-in-vector (str/replace (.getName %) #".up.sql" "") formatted-applied-migrations))) (sort-by #(.getName %) files))))
 
 (defn execute-migration-and-save [statements file-name db migrations-table-name]
   (println (str "Applying up migrations of file " file-name))

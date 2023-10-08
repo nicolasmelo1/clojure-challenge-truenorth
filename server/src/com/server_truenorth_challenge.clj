@@ -7,9 +7,10 @@
             [com.server-truenorth-challenge.ui :as ui]
             [com.server-truenorth-challenge.worker :as worker]
             [com.server-truenorth-challenge.auth.plugin :as auth]
+            [com.server-truenorth-challenge.admin.plugin :as admin]
             [com.server-truenorth-challenge.operations.plugin :as operations]
+            [com.server-truenorth-challenge.core.middlewares :as core-middlewares]
             [com.server-truenorth-challenge.records.plugin :as records]
-
             [com.server-truenorth-challenge.schema :as schema]
             [clojure.test :as test]
             [clojure.tools.logging :as log]
@@ -22,6 +23,7 @@
   [app/plugin
    (biff/authentication-plugin {})
    auth/plugin
+   admin/plugin
    operations/plugin
    records/plugin
    home/plugin
@@ -30,7 +32,7 @@
 
 (def routes [["" {:middleware [mid/wrap-site-defaults]}
               (keep :routes plugins)]
-             ["" {:middleware [mid/wrap-api-defaults]}
+             ["" {:middleware [mid/wrap-api-defaults core-middlewares/format-response-middleware]}
               (keep :api-routes plugins)]])
 
 (def handler (-> (biff/reitit-handler {:routes routes})
