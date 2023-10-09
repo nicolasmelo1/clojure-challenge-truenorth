@@ -21,6 +21,12 @@
      :user-balance new-user-balance}))
 
 (defn- visit-square-root
+  "Square root is a unary operation, so we only need to visit the left node. I wanted to make it an expression, but, for the sake of this test, decided to keep it simple.
+   
+   ### Args:
+   ** :node-amounts-and-user-balance (map) **: A map with the node, the amounts and the user balance. Node is the actual node, or the value of an expression.
+   Amounts is a vector so we can keep track of all of the operations we should charge, how much we should charge and how it'll change the user balance. Last but not
+   least, the result of each operation, so we can keep track of each operation that was made.\n"
   [{:keys [node amounts user-balance]}]
   (let [new-user-balance (- user-balance (:cost node))
         result (-> node :value Float/parseFloat Math/sqrt)]
@@ -35,7 +41,13 @@
 (defn visit
   "This will visit each node recursively and will evaluate the expression based on the abstract syntax tree.
    It will also keep track of the amounts and the user balance for each operation performed this way we can add the data correctly to the database
-   and we can also return the amounts and the user balance to the client so that it can be displayed in the UI"
+   and we can also return the amounts and the user balance to the client so that it can be displayed in the UI
+   
+   ### Args:
+   ** :node-amounts-and-user-balance (map) **: A map with the node, the amounts and the user balance. Node is the actual node, or the value of an expression.
+   Amounts is a vector so we can keep track of all of the operations we should charge, how much we should charge and how it'll change the user balance. Last but not
+   least, the result of each operation, so we can keep track of each operation that was made.\n
+   "
   [{:keys [node amounts user-balance] :as node-amounts-and-user-balance}]
   (cond
     (= (:type node) :integer) {:node (Integer/parseInt (:value node))

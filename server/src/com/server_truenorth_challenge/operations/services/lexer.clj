@@ -32,7 +32,7 @@
              :position (+ start-position 1)})))
 
 (defn get-token
-  "Get each token, one by one. It will return a map with the type, cost, total, value, and position of the token.\n
+  "Get each token, one by one. It will return a map with the type, cost, total, value, the operation-id and position of the token.\n
    We completely ignore spaces, and we will return the next token if we find one.\n
 
    ### Args:
@@ -86,7 +86,19 @@
      :total total
      :position current-position}))
 
-(defn- recursive-lexer-factory [expression costs & {:keys [current-position total] :or {current-position 0 total 0}}]
+(defn- recursive-lexer-factory
+  "To make the lexer work we need to apply recursion, so pretty much whenever you call :get-next-token function, a completely new lexer is generated and it should be passed.
+   On Object Oriented Programming we can keep data on the instance so we can keep track of things, since clojure is imutable by default, the only way to be able to accomplish
+   this is through recursion.
+   
+   So what is the idea: The parser will require for a node and it will call the lexer to get the next token. This goes on and on and on, and on until we finish transforming the
+   hole expression in an Abstract Syntax Tree. So what we do on the Parser is that we pass the lexer around all the nodes. (For that you need to call like ((:get-next-token lexer)) 
+   get-next-token is a function that expects no arguments.
+   
+   A Token is a special map object that holds useful information for both the Parser and the Interpreter. It will hold each value of the expression ready to be transformed into an AST.
+   
+   That's pretty much it. That's how we can keep track of the position of the lexer and the total cost of the expression."
+  [expression costs & {:keys [current-position total] :or {current-position 0 total 0}}]
   (let [{:keys [type value cost operation-id total position]} (get-token expression costs current-position total)
         lexer {:current-position position
                :expression expression

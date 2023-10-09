@@ -62,7 +62,14 @@
         next-lexer ((:get-next-token lexer))] {:lexer next-lexer
                                                :node node}))
 
-(defn parse [lexer]
+(defn parse
+  "Create an abstract syntax tree from the lexer, we use the data from the costs alongside it to calculate the total cost
+   This will update all of the records so for example, if you have a deeply nested expression, with lots of operations we will
+   guarantee to update each one of them in the database.
+     
+   Each node MUST contain the following keys: :cost and :operation-id, the rest of the keys are optional and depend on the type of node. For Binary Operation
+   nodes we will have the following keys: :left, :right, :type. For Factors we return the node as the token."
+  [lexer]
   (let [last-node (program lexer)]
     {:total-cost (:total (:lexer last-node))
      :abstract-syntax-tree (:node last-node)}))

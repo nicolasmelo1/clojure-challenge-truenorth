@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { Outlet } from "@tanstack/react-router";
 
 export default function Root() {
-  const [count, setCount] = useState(0);
-
-  return <h1>Hello world!!!!</h1>;
+  return (
+    <div>
+      <h1>SImple Calculator</h1>
+      <Outlet />
+    </div>
+  );
 }
