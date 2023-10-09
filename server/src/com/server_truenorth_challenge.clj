@@ -1,17 +1,11 @@
 (ns com.server-truenorth-challenge
   (:require [com.biffweb :as biff]
-            [com.server-truenorth-challenge.email :as email]
-            [com.server-truenorth-challenge.app :as app]
-            [com.server-truenorth-challenge.home :as home]
             [com.server-truenorth-challenge.middleware :as mid]
-            [com.server-truenorth-challenge.ui :as ui]
-            [com.server-truenorth-challenge.worker :as worker]
             [com.server-truenorth-challenge.auth.plugin :as auth]
             [com.server-truenorth-challenge.admin.plugin :as admin]
             [com.server-truenorth-challenge.operations.plugin :as operations]
             [com.server-truenorth-challenge.core.middlewares :as core-middlewares]
             [com.server-truenorth-challenge.records.plugin :as records]
-            [com.server-truenorth-challenge.schema :as schema]
             [clojure.test :as test]
             [clojure.tools.logging :as log]
             [clojure.tools.namespace.repl :as tn-repl]
@@ -20,17 +14,13 @@
             [nrepl.cmdline :as nrepl-cmd]))
 
 (def plugins
-  [app/plugin
-   (biff/authentication-plugin {})
+  [(biff/authentication-plugin {})
    auth/plugin
    admin/plugin
    operations/plugin
-   records/plugin
-   home/plugin
-   schema/plugin
-   worker/plugin])
+   records/plugin])
 
-(def routes [["" {:middleware [mid/wrap-site-defaults]}
+(def routes [[""
               (keep :routes plugins)]
              ["" {:middleware [mid/wrap-api-defaults core-middlewares/format-response-middleware]}
               (keep :api-routes plugins)]])
@@ -40,7 +30,7 @@
 
 (def static-pages (apply biff/safe-merge (map :static plugins)))
 
-(defn generate-assets! [ctx]
+(defn generate-assets! [_]
   (biff/export-rum static-pages "target/resources/public")
   (biff/delete-old-files {:dir "target/resources/public"
                           :exts [".html"]}))
@@ -59,12 +49,9 @@
 
 (def initial-system
   {:biff/plugins #'plugins
-   :biff/send-email #'email/send-email
    :biff/handler #'handler
    :biff/malli-opts #'malli-opts
    :biff.beholder/on-save #'on-save
-   :biff.middleware/on-error #'ui/on-error
-   :biff.xtdb/tx-fns biff/tx-fns
    :com.server-truenorth-challenge/chat-clients (atom #{})})
 
 (defonce system (atom {}))
@@ -72,9 +59,6 @@
 (def components
   [biff/use-config
    biff/use-secrets
-   biff/use-xt
-   biff/use-queues
-   biff/use-tx-listener
    biff/use-jetty
    biff/use-chime
    biff/use-beholder])

@@ -1,11 +1,10 @@
 {
-  "name": "clojure-challenge-truenorth",
+  "name": "@clojure-challenge-truenorth/server",
   "version": "0.0.1",
-  "description": " This is the truenorth challenge for a position of working with clojure",
-  "main": "index.js",
+  "description": "This is the server made it clojure",
   "scripts": {
-    "dev": "turbo run dev",
-    "interpret": "turbo run interpret"
+    "dev": "bb run dev",
+    "interpret": "bb run evaluate"
   },
   "repository": {
     "type": "git",
@@ -21,8 +20,5 @@
   "bugs": {
     "url": "https://github.com/nicolasmelo1/clojure-challenge-truenorth/issues"
   },
-  "homepage": "https://github.com/nicolasmelo1/clojure-challenge-truenorth#readme",
-  "devDependencies": {
-    "turbo": "^1.10.15"
-  }
+  "homepage": "https://github.com/nicolasmelo1/clojure-challenge-truenorth#readme"
 }

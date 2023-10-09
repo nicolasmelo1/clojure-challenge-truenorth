@@ -90,15 +90,18 @@
       (<= 200 status-code 299) "success"
       :else "success")))
 
-
 (defn format-response-middleware
   "Middleware used for formatting the response. This will format the response to be a JSON response.
    This will also add the headers to the response, like the content-type header."
   [handler]
   (fn [ctx]
     (let [response (handler ctx)
-          formated-body-response (if (map? (:body response))
-                                   (assoc response :body
-                                          {:status (get-status (:status response)) :data (:body response)})
+          formated-body-response (if (or (map? (:body response))
+                                         (vector? (:body response))
+                                         (string? (:body response))
+                                         (number? (:body response))
+                                         (boolean? (:body response))
+                                         (nil? (:body response)))
+                                   (assoc response :body {:status (get-status (:status response)) :data (:body response)})
                                    (:body response))]
       (assoc formated-body-response :headers (assoc (:headers formated-body-response) "content-type" "application/json")))))

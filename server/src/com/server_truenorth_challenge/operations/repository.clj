@@ -11,3 +11,21 @@
    (sql/format
     {:select [:id :type :cost]
      :from [:operations]})))
+
+(defn records-get-last-record-of-user
+  [user-id]
+  (jdbc/execute!
+   settings/db
+   (sql/format
+    {:select [:user-balance]
+     :from [:records]
+     :where [:= :user-id user-id]
+     :order-by [[:id :desc]]
+     :limit 1})))
+
+(defn records-bulk-insert
+  [user-id operations]
+  (jdbc/execute!
+   settings/db (sql/format {:insert-into :records
+                            :columns [:user-id :operation-id :amount :user-balance :operation-response]
+                            :values (map (fn [operation] [user-id (:operation-id operation) (:amount operation) (:user-balance operation) (:result operation)]) (into [] operations))})))
