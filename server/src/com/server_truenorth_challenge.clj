@@ -11,6 +11,7 @@
             [clojure.tools.namespace.repl :as tn-repl]
             [malli.core :as malc]
             [malli.registry :as malr]
+            [ring.middleware.cors :as cors]
             [nrepl.cmdline :as nrepl-cmd]))
 
 (def plugins
@@ -20,9 +21,10 @@
    operations/plugin
    records/plugin])
 
-(def routes [[""
+(def routes [["" {:middleware [mid/wrap-api-defaults]}
               (keep :routes plugins)]
-             ["" {:middleware [mid/wrap-api-defaults core-middlewares/format-response-middleware]}
+             ["/v1"
+              {:middleware [mid/cors-middleware mid/wrap-api-defaults core-middlewares/format-response-middleware]}
               (keep :api-routes plugins)]])
 
 (def handler (-> (biff/reitit-handler {:routes routes})
@@ -52,6 +54,7 @@
    :biff/handler #'handler
    :biff/malli-opts #'malli-opts
    :biff.beholder/on-save #'on-save
+   :biff.xtdb/tx-fns biff/tx-fns
    :com.server-truenorth-challenge/chat-clients (atom #{})})
 
 (defonce system (atom {}))
@@ -59,6 +62,8 @@
 (def components
   [biff/use-config
    biff/use-secrets
+   biff/use-xt
+   biff/use-queues
    biff/use-jetty
    biff/use-chime
    biff/use-beholder])

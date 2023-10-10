@@ -1,10 +1,13 @@
 import { Route } from "@tanstack/react-router";
 
 import { RecordsPage } from "./pages";
-import { rootRoute } from "../../routes";
+import { authenticatedRoute } from "../../routes";
 
 export const recordsRoute = new Route({
   path: "/records",
-  component: RecordsPage,
-  getParentRoute: () => rootRoute,
+  component: () => {
+    console.log("records");
+    return <RecordsPage />;
+  },
+  getParentRoute: () => authenticatedRoute,
 });

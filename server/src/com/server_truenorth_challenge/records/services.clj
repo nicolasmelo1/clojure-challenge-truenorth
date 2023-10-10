@@ -29,7 +29,8 @@
     (into [] filtered-filter-data)))
 
 (defn get-records
-  [sorting-fields
+  [user-id
+   sorting-fields
    sorting-orders
    filter-fields
    filter-values
@@ -43,16 +44,15 @@
                                (and (string? page) (re-matches #"^\d+$" page)) (assoc :page (read-string page)))
         current-page (if (number? (:page formatted-fetch-data)) (:page formatted-fetch-data) 1)
         page-offset (if (number? current-page) (* settings/records-page-size (-> current-page (- 1))) settings/records-page-size)
-        data-from-db (records-repository/records-get-all (:sort formatted-fetch-data) (:filter formatted-fetch-data) (:search formatted-fetch-data) settings/records-page-size page-offset)
+        data-from-db (records-repository/records-get-all user-id (:sort formatted-fetch-data) (:filter formatted-fetch-data) (:search formatted-fetch-data) settings/records-page-size page-offset)
         total-pages (-> data-from-db :total first :total (/ settings/records-page-size) Math/ceil int)]
     {:pagination {:page (if (> current-page total-pages) total-pages current-page)
                   :total total-pages}
      :records (mapv (fn [value]
                       {:id (:records/id value)
-                       :operation-id (:records/operation_id value)
-                       :user-id (:records/user_id value)
+                       :operation_type (:operations/operation_type value)
                        :amount (:records/amount value)
-                       :user-balance (:records/user_balance value)
-                       :operation-response (:records/operation_response value)
+                       :user_balance (:records/user_balance value)
+                       :operation_response (:records/operation_response value)
                        :date (:records/date value)}) (:records data-from-db))}))
     

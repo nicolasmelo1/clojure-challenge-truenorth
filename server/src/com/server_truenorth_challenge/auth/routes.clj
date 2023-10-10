@@ -13,8 +13,15 @@
                          {:body (:data jwt-token)}
                          {:body {:login-error ["Invalid username or password"]} :status 401})))}])
 
-(def refresh-token
-  ["/refresh-token" {:middleware [auth-middlewares/jwt-refresh-token-middleware]
-                     :get (fn [{:keys [user]}]
-                            {:body (auth-services/refresh-the-tokens (:users/id user))})}])
+(def refresh
+  ["/refresh" {:middleware [auth-middlewares/jwt-refresh-token-middleware]
+               :get (fn [{:keys [user]}]
+                      {:body (auth-services/refresh-the-tokens (:users/id user))})}])
+
+(def me
+  ["/me" {:middleware [auth-middlewares/jwt-authentication-middleware]
+          :get (fn [{:keys [user]}]
+                 {:body {:id (:users/id user)
+                         :username (:users/username user)
+                         :status (:users/status user)}})}])
               

@@ -10,7 +10,10 @@
 
 (def default-user-balance 100)
 
-(def records-page-size 2)
+(def allowed-hosts ["http://localhost:5173"])
+
+(def records-page-size 15)
+
 (def db {:dbtype "postgresql"
          :user "postgres"
          :dbname "postgres"

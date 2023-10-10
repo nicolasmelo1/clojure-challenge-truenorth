@@ -6,16 +6,18 @@
    [com.server-truenorth-challenge.auth.middlewares :as auth-middlewares]))
 
 (def list-records
-  ["/list" {:middleware [auth-middlewares/jwt-authentication-middleware
-                         (core-middlewares/query-params-schema-validator-middleware-factory
-                          {:get records-schemas/query-params-records}
-                          [[:filter-fields :filter-values :filter-operations]
-                           [:sorting-fields :sorting-orders]])]
-            :get (fn [{:keys [query-params] :as _}]
-                   {:body (records-services/get-records (:sorting-fields query-params)
-                                                        (:sorting-orders query-params)
-                                                        (:filter-fields query-params)
-                                                        (:filter-values query-params)
-                                                        (:filter-operations query-params)
-                                                        (:search query-params)
-                                                        (:page query-params))})}])
+  ["" {:middleware [auth-middlewares/jwt-authentication-middleware
+                    (core-middlewares/query-params-schema-validator-middleware-factory
+                     {:get records-schemas/query-params-records}
+                     [[:filter-fields :filter-values :filter-operations]
+                      [:sorting-fields :sorting-orders]])]
+       :get (fn [{:keys [query-params user] :as _}]
+              {:body (records-services/get-records
+                      (:users/id user)
+                      (:sorting-fields query-params)
+                      (:sorting-orders query-params)
+                      (:filter-fields query-params)
+                      (:filter-values query-params)
+                      (:filter-operations query-params)
+                      (:search query-params)
+                      (:page query-params))})}])

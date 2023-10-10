@@ -1,8 +1,27 @@
 (ns com.server-truenorth-challenge.middleware
   (:require [com.biffweb :as biff]
+            [clojure.string :as str]
             [muuntaja.middleware :as muuntaja]
             [ring.middleware.anti-forgery :as csrf]
+            [com.server-truenorth-challenge.settings :as settings]
             [ring.middleware.defaults :as rd]))
+
+(defn cors-middleware [handler]
+  (fn [ctx]
+    (let [origin (->> ctx :headers (filter #(-> % (nth 0) (= "origin"))) first second)
+          origin-allowed? (or (nil? origin) (some #(= origin %) settings/allowed-hosts))
+          is-preflight (-> ctx :request-method (= :options))]
+
+      (if is-preflight {:headers {"content-length" "0"
+                                  "access-control-allow-origin" (str/join ", " settings/allowed-hosts)
+                                  "access-control-allow-methods" "DELETE, GET, OPTIONS, PATCH, POST, PUT"
+                                  "access-control-allow-headers" "Content-Type, Accept, Authorization, origin"
+                                  "access-control-allow-credentials" "true"
+                                  "access-control-max-age" "86400"}}
+          (let [response (handler ctx)]
+            (if origin-allowed?
+              (assoc response :headers (assoc (:headers response) "access-control-allow-origin" origin))
+              response))))))
 
 ;; Stick this function somewhere in your middleware stack below if you want to
 ;; inspect what things look like before/after certain middleware fns run.

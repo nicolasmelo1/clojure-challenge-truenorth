@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-router": "0.0.1-beta.194",
     "@tanstack/react-table": "^8.10.6",
+    "axios": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^6.0.8"
+    "styled-components": "^6.0.8",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

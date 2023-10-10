@@ -4,72 +4,117 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+
+import { Filter, Sort } from "../../components";
 import * as Styled from "./RecordsPage.styles";
-import { useState } from "react";
+import { useRecords } from "../../hookts";
+import {
+  operationsReferenceTable,
+  convertNumberToMoney,
+  convertIsoDateToDate,
+} from "../../utils";
 
 const columns: ColumnDef<{
-  operation: string;
-  firstName: string;
+  operation_type: string;
+  operation_response: string;
   amount: number;
   date: string;
-  userBalance: number;
+  user_balance: number;
+  id: number;
 }>[] = [
   {
-    accessorKey: "operation",
+    accessorKey: "operation_type",
     header: "Operation",
-    cell: (info) => info.renderValue(),
+    cell: (info) => (
+      <Styled.Cell>
+        {
+          operationsReferenceTable[
+            info.getValue() as keyof typeof operationsReferenceTable
+          ]
+        }
+      </Styled.Cell>
+    ),
   },
   {
-    accessorKey: "firstName",
-    header: "First Name",
-    cell: (info) => info.renderValue(),
+    accessorKey: "operation_response",
+    header: "Result",
+    cell: (info) => <Styled.Cell>{info.getValue() as string}</Styled.Cell>,
   },
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: (info) => info.renderValue(),
+    cell: (info) => (
+      <Styled.Cell>
+        {convertNumberToMoney(info.getValue() as number)}
+      </Styled.Cell>
+    ),
   },
-  { accessorKey: "date", header: "Date", cell: (info) => info.renderValue() },
   {
-    accessorKey: "userBalance",
+    accessorKey: "date",
+    header: "Date",
+    cell: (info) => (
+      <Styled.Cell>
+        {convertIsoDateToDate(info.getValue() as string)}
+      </Styled.Cell>
+    ),
+  },
+  {
+    accessorKey: "user_balance",
     header: "User Balance",
-    cell: (info) => info.renderValue(),
+    cell: (info) => (
+      <Styled.Cell>
+        {convertNumberToMoney(info.getValue() as number)}
+      </Styled.Cell>
+    ),
   },
 ];
 
-const defaultData = [
-  {
-    amount: 0,
-    date: "heeey",
-    firstName: "John",
-    operation: "Soma",
-    userBalance: 123,
-  },
-  {
-    amount: 0,
-    date: "heeey",
-    firstName: "John",
-    operation: "Soma",
-    userBalance: 123,
-  },
-];
 export default function RecordsPage() {
-  const [data, setData] = useState(() => [...defaultData]);
+  const {
+    data: records,
+    sortsState,
+    setSortsState,
+    filtersState,
+    setFiltersState,
+  } = useRecords();
 
   const table = useReactTable({
-    data: data,
+    data: records,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  table.getRowModel().rows.map((row) =>
-    row.getVisibleCells().map((cell) => {
-      console.log(flexRender(cell.column.columnDef.cell, cell.getContext()));
-    })
-  );
+  console.log("aqui");
   return (
     <Styled.Container>
       <h1>Recorddds</h1>
+      <Styled.TopButtonsContainer>
+        <Styled.SortAndFilterButtons>
+          <Filter
+            columns={table.getFlatHeaders().map((column) => ({
+              label: column.column.columnDef.header as string,
+              value: column.id || "",
+              dataType: (["amount", "userBalance"].includes(column.id || "")
+                ? "number"
+                : "string") as "string" | "number" | "date",
+            }))}
+            filters={filtersState}
+            onApply={(filters) => setFiltersState(filters)}
+          />
+          <Styled.SortButton>
+            <Sort
+              sorts={sortsState}
+              columns={table.getFlatHeaders().map((column) => ({
+                label: column.column.columnDef.header as string,
+                value: column.id || "",
+              }))}
+              onApply={(sorts) => {
+                console.log("sorts", sorts);
+                setSortsState(sorts);
+              }}
+            />
+          </Styled.SortButton>
+        </Styled.SortAndFilterButtons>
+      </Styled.TopButtonsContainer>
       <Styled.TableContainer>
         <table>
           <thead>

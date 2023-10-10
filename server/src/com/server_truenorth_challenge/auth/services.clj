@@ -15,7 +15,7 @@
     **:user-id (int)**: The id of the user to encrypt the data in the token"
   [user-id]
   {:token (biff/jwt-encrypt {:user-id user-id :type "token" :exp-in settings/jwt-token-expiration-time} settings/jwt-secret)
-   :refresh-token (biff/jwt-encrypt {:user-id user-id :type "refresh-token" :exp-in settings/jwt-refresh-token-expiration-time} settings/jwt-secret)})
+   :refresh_token (biff/jwt-encrypt {:user-id user-id :type "refresh-token" :exp-in settings/jwt-refresh-token-expiration-time} settings/jwt-secret)})
 
 (defn authenticate
   "Authenticate the user using the username and password provided.
