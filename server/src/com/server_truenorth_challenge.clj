@@ -2,6 +2,7 @@
   (:require [com.biffweb :as biff]
             [com.server-truenorth-challenge.middleware :as mid]
             [com.server-truenorth-challenge.auth.plugin :as auth]
+            [com.server-truenorth-challenge.core.plugin :as core]
             [com.server-truenorth-challenge.operations.plugin :as operations]
             [com.server-truenorth-challenge.core.middlewares :as core-middlewares]
             [com.server-truenorth-challenge.records.plugin :as records]
@@ -15,6 +16,7 @@
 
 (def plugins
   [(biff/authentication-plugin {})
+   core/plugin
    auth/plugin
    operations/plugin
    records/plugin])
