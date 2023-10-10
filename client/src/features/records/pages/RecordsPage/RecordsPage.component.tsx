@@ -4,16 +4,19 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { Filter, Sort } from "../../components";
 import * as Styled from "./RecordsPage.styles";
-import { useRecords } from "../../hooks";
+import { useRecords, useRemove } from "../../hooks";
 import {
   operationsReferenceTable,
   convertNumberToMoney,
   convertIsoDateToDate,
 } from "../../utils";
-import { useMemo } from "react";
+import { Headers } from "../../../utils";
 
 const columns: ColumnDef<{
   operation_type: string;
@@ -68,11 +71,17 @@ const columns: ColumnDef<{
       </Styled.Cell>
     ),
   },
+  {
+    accessorKey: "table_operations",
+    header: "",
+    cell: () => "",
+  },
 ];
 
 export default function RecordsPage() {
   const {
     data: records,
+    fetchData,
     sortsState,
     setSortsState,
     filtersState,
@@ -81,6 +90,7 @@ export default function RecordsPage() {
     page: currentPage,
     total,
   } = useRecords();
+  const removeRow = useRemove();
 
   const pages = useMemo(() => {
     const pages = [];
@@ -92,7 +102,6 @@ export default function RecordsPage() {
           ? currentPage - maxNumberOfShownPages / 2
           : total - maxNumberOfShownPages
         : 1;
-    console.log(startingPage + maxNumberOfShownPages < total);
     for (
       let i = Math.ceil(startingPage);
       i < total && i < startingPage + maxNumberOfShownPages;
@@ -102,6 +111,11 @@ export default function RecordsPage() {
     return pages;
   }, [currentPage, total]);
 
+  function onRemoveRow(rowIndex: number) {
+    const recordToDelete = records[rowIndex];
+    removeRow(recordToDelete.id).then(() => fetchData());
+  }
+
   const table = useReactTable({
     data: records,
     columns: columns,
@@ -110,37 +124,56 @@ export default function RecordsPage() {
 
   return (
     <Styled.Container>
-      <Styled.TitleContainer>
-        <Styled.PageTitle $selected={true}>User Records</Styled.PageTitle>
-        <Styled.PageTitleDivisor>{"/"}</Styled.PageTitleDivisor>
-        <Styled.PageLink to="/app/operations/calculator" $selected={false}>
-          Calculator
-        </Styled.PageLink>
-      </Styled.TitleContainer>
+      <Headers
+        headers={[
+          {
+            title: "History",
+          },
+          {
+            title: "Calculator",
+            link: "/app/operations/calculator",
+          },
+          {
+            title: "Random String",
+            link: "/app/operations/random-string",
+          },
+        ]}
+      />
       <Styled.TopButtonsContainer>
         <Styled.SortAndFilterButtons>
           <Filter
-            columns={table.getFlatHeaders().map((column) => ({
-              label: column.column.columnDef.header as string,
-              value: column.id || "",
-              dataType: (["amount", "userBalance"].includes(column.id || "")
-                ? "number"
-                : column.id === "operation_type"
-                ? "operation-type"
-                : "string") as "string" | "number" | "date" | "operation-type",
-            }))}
+            columns={table
+              .getFlatHeaders()
+              .filter((column) => column.id !== "table_operations")
+              .map((column) => ({
+                label: column.column.columnDef.header as string,
+                value: column.id || "",
+                dataType: (["amount", "userBalance"].includes(column.id || "")
+                  ? "number"
+                  : column.id === "operation_type"
+                  ? "operation-type"
+                  : column.id === "date"
+                  ? "date"
+                  : "string") as
+                  | "string"
+                  | "number"
+                  | "date"
+                  | "operation-type",
+              }))}
             filters={filtersState}
             onApply={(filters) => setFiltersState(filters)}
           />
           <Styled.SortButton>
             <Sort
               sorts={sortsState}
-              columns={table.getFlatHeaders().map((column) => ({
-                label: column.column.columnDef.header as string,
-                value: column.id || "",
-              }))}
+              columns={table
+                .getFlatHeaders()
+                .filter((column) => column.id !== "table_operations")
+                .map((column) => ({
+                  label: column.column.columnDef.header as string,
+                  value: column.id || "",
+                }))}
               onApply={(sorts) => {
-                console.log("sorts", sorts);
                 setSortsState(sorts);
               }}
             />
@@ -184,7 +217,20 @@ export default function RecordsPage() {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {(
+                      cell.column.columnDef as unknown as {
+                        accessorKey: string;
+                      }
+                    ).accessorKey === "table_operations" ? (
+                      <Styled.RemoveButton>
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          onClick={() => onRemoveRow(cell.row.index)}
+                        />
+                      </Styled.RemoveButton>
+                    ) : (
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
                   </td>
                 ))}
               </tr>

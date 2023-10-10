@@ -50,7 +50,7 @@
    "
   [{:keys [node amounts user-balance] :as node-amounts-and-user-balance}]
   (cond
-    (= (:type node) :integer) {:node (Integer/parseInt (:value node))
+    (= (:type node) :integer) {:node (Float/parseFloat (:value node))
                                :amounts amounts
                                :user-balance user-balance}
     (= (:type node) :float) {:node (Float/parseFloat (:value node))
@@ -59,7 +59,7 @@
     (= (:type node) :plus) (visit-binary-operations node-amounts-and-user-balance + :addition)
     (= (:type node) :minus) (visit-binary-operations node-amounts-and-user-balance - :subtraction)
     (= (:type node) :multiply) (visit-binary-operations node-amounts-and-user-balance * :multiplication)
-    (= (:type node) :divide)  (visit-binary-operations node-amounts-and-user-balance * :division)
+    (= (:type node) :divide)  (visit-binary-operations node-amounts-and-user-balance / :division)
     (= (:type node) :square-root) (visit-square-root node-amounts-and-user-balance)
     :else (throw (Exception. "Invalid syntax"))))
 

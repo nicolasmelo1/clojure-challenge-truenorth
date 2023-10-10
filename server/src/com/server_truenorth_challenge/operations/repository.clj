@@ -19,7 +19,7 @@
    (sql/format
     {:select [:user-balance]
      :from [:records]
-     :where [:= :user-id user-id]
+     :where [:and [:= :user-id user-id] [:is :deleted_at nil]]
      :order-by [[:id :desc]]
      :limit 1})))
 

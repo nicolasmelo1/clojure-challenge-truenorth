@@ -156,14 +156,14 @@ export default function useMutate<D extends object | D[], R = D>(
       throw new ValidationError({ data: null, request: axiosError });
     }
   }
-  /*
+
   useEffect(() => {
     if (options?.preventRefMutation) return;
     urlRef.current = url;
     queryKeyRef.current = queryKey;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, queryKey]);
-*/
+
   return {
     urlRef,
     queryClient,

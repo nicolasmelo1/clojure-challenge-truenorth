@@ -14,7 +14,7 @@
           does-user-have-enough-money? (>= new-user-balance 0)]
       (if does-user-have-enough-money?
         (let [{:keys [node amounts]} (interpreter/evaluate abstract-syntax-tree user-balance)
-              _ (operations-repository/records-bulk-insert user-id amounts)]
+              _ (if (> (count amounts) 0) (operations-repository/records-bulk-insert user-id (reverse amounts)), nil)]
           {:is-valid true
            :reason nil
            :data {:result node
@@ -36,7 +36,7 @@
                                                                         :user-balance new-user-balance
                                                                         :result data}])]
              {:is-valid true
-              :reason :invalid-syntax
+              :reason nil
               :data {:result data
                      :balance new-user-balance}})
            {:is-valid false

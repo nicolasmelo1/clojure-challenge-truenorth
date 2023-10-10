@@ -47,7 +47,6 @@ export function AuthenticationProvider(props: PropsWithChildren<unknown>) {
     response: AxiosResponse | undefined,
     makeRequestAgain: () => void
   ) {
-    console.log("handleUnauthenticated");
     const { refreshToken } = await api.getTokens();
     const isUnauthorized = response?.status === 401;
     const canRefreshTheToken =

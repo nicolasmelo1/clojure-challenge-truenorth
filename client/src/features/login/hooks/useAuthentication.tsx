@@ -37,7 +37,7 @@ export default function useAuthentication() {
           };
           setIsAuthenticated(true);
           await api.setTokens(formattedLoginData);
-          router.navigate({ to: "/app/records" });
+          router.navigate({ to: "/app/operations/calculator" });
         }
       },
     },

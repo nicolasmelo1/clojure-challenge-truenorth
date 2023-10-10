@@ -5,12 +5,17 @@
 (def migrations-location "resources/migrations")
 (def migrations-table-name "__migrations")
 
+(defn get-env-variable [env-to-get func-to-parse default-value]
+  (or (some-> (System/getenv env-to-get)
+              func-to-parse)
+      default-value))
+
 (def db {:dbtype "postgresql"
-         :user "postgres"
-         :dbname "postgres"
-         :password ""
-         :host "localhost"
-         :port "5432"})
+         :user (get-env-variable "DB_USER" str "postgres")
+         :dbname (get-env-variable "DB_NAME" str "postgres")
+         :password (get-env-variable "DB_PASS" str "")
+         :host (get-env-variable "DB_HOST" str "localhost")
+         :port (get-env-variable "DB_PORT" str "5432")})
 
 (defn migrate
   "This will run all of your pending migrations. This works similarly to Migratus library. But i needed to do it by hand."

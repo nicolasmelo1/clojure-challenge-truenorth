@@ -21,3 +21,9 @@
                       (:filter-operations query-params)
                       (:search query-params)
                       (:page query-params))})}])
+
+(def remove-record
+  ["/:id" {:middleware [auth-middlewares/jwt-authentication-middleware]
+           :delete (fn [{:keys [user path-params] :as _}]
+                     (records-services/remove-record (:users/id user) (:id path-params))
+                     {:body {:message "Ok"}})}])

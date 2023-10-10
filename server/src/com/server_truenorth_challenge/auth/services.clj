@@ -51,3 +51,9 @@
     **:user-id (str)**: The user-id to create the tokens for"
   [user-id]
   (create-tokens user-id))
+
+(defn create-user
+  [username password]
+  (let [hashed-password (-> (hash/sha256 password)
+                            (codecs/bytes->hex))]
+    (auth-repository/users-insert-new-with-username-and-password username hashed-password)))

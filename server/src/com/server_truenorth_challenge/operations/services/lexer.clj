@@ -29,7 +29,7 @@
              :cost cost
              :total total
              :value value
-             :position (+ start-position 1)})))
+             :position start-position})))
 
 (defn get-token
   "Get each token, one by one. It will return a map with the type, cost, total, value, the operation-id and position of the token.\n

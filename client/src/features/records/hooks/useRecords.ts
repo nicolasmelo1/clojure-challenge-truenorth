@@ -92,7 +92,7 @@ export default function useRecords() {
   const stringfiedFilters = JSON.stringify(filtersState);
   const stringfiedSorts = JSON.stringify(sortsState);
 
-  useEffect(() => {
+  function fetchData() {
     if (isAuthenticated) {
       api
         .get<{
@@ -110,7 +110,6 @@ export default function useRecords() {
           }[];
         }>("/records", { params: searchParams }, { isAuthenticated: true })
         .then((response) => {
-          console.log(response.response.data.data);
           if (response.response.data.data) {
             setTotal(response.response.data.data.pagination.total);
             setData(response.response.data.data.records);
@@ -118,10 +117,16 @@ export default function useRecords() {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, stringfiedSorts, page, stringfiedFilters]);
 
   return {
     data: data,
+    fetchData,
     error: {},
     page,
     total,
@@ -132,9 +137,6 @@ export default function useRecords() {
       _setFiltersState(filters);
     },
     sortsState,
-    setSortsState: (sorts: typeof sortsState) => {
-      setPage(1);
-      _setSortsState(sorts);
-    },
+    setSortsState: (sorts: typeof sortsState) => _setSortsState(sorts),
   };
 }

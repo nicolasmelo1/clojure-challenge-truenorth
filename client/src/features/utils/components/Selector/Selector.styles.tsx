@@ -26,8 +26,10 @@ export const Option = styled.button`
   justify-content: center;
   align-items: center;
   background-color: white;
+  user-select: none;
   padding: 5px;
   border: 1px solid #c2c2c2c2;
+  cursor: pointer;
   border-radius: 5px;
   width: 100%;
 `;

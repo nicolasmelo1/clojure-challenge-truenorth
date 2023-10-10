@@ -1,10 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { RootRoute, Route, Router } from "@tanstack/react-router";
 
-import { operationsRoute } from "./features/operations/routes";
+import {
+  operationsRoute,
+  randomStringRoute,
+} from "./features/operations/routes";
 import Root from "./App";
 import { recordsRoute } from "./features/records/routes";
-import { loginRoutes } from "./features/login/routes";
+import { loginRoutes, registerRoutes } from "./features/login/routes";
 import { useAppReady } from "./features/utils";
 import { Fragment } from "react";
 
@@ -41,8 +44,12 @@ export const unauthenticatedRoute = new Route({
 export const rootRoute = new RootRoute();
 
 const routeTree = rootRoute.addChildren([
-  unauthenticatedRoute.addChildren([loginRoutes]),
-  authenticatedRoute.addChildren([operationsRoute, recordsRoute]),
+  unauthenticatedRoute.addChildren([loginRoutes, registerRoutes]),
+  authenticatedRoute.addChildren([
+    operationsRoute,
+    randomStringRoute,
+    recordsRoute,
+  ]),
 ]);
 
 export const router = new Router({ routeTree });

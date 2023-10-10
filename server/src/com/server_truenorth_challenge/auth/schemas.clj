@@ -4,3 +4,9 @@
   [:map
    [:username :string]
    [:password :string]])
+
+
+(def create-user
+  [:map
+   [:username :string]
+   [:password :string]])

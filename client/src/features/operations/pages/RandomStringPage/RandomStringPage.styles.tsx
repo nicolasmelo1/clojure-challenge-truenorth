@@ -8,28 +8,7 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Button = styled.button<{
-  $type: "number" | "equal" | "operations";
-}>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin: 2px;
-  border-radius: 50%;
-  border: none;
-  user-select: none;
-  color: ${(props) => (props.$type === "equal" ? "#f2f2f2" : "#444444")};
-  background-color: ${(props) =>
-    props.$type === "number"
-      ? "#f7f7f7f7"
-      : props.$type === "equal"
-      ? "#444444"
-      : "#c2c2c2c2"};
-`;
-
-export const CalculatorContainer = styled.div`
+export const RandomStringContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -39,6 +18,18 @@ export const CalculatorContainer = styled.div`
   min-width: 250px;
 `;
 
+export const ButtonToGenerate = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  margin: 2px;
+  border-radius: 5px;
+  border: 1px solid #c2c2c2c2;
+  background-color: #f7f7f7f7;
+`;
+
 export const Display = styled.div`
   display: flex;
   justify-content: center;
@@ -46,17 +37,9 @@ export const Display = styled.div`
   width: 100%;
   height: 50px;
   margin: 2px;
-  margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #c2c2c2c2;
   background-color: #f7f7f7f7;
-`;
-
-export const ButtonsRow = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  width: 100%;
 `;
 
 export const TitleContainer = styled.div`
@@ -103,9 +86,7 @@ export const PageButton = styled.button<{ $selected: boolean }>`
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #c2c2c2c2;
-  user-select: none;
   color: #444444;
-  user-select: none;
   background-color: ${({ $selected }) =>
     $selected ? "#c2c2c2c2" : "transparent"};
   width: 30px;

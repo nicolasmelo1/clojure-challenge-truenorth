@@ -25,3 +25,14 @@
      :where [:and
              [:= :id id]
              [:= :status [:cast "active" :users_status]]]})))
+
+
+(defn users-insert-new-with-username-and-password
+  [username password]
+  (try
+    (second [(jdbc/execute!
+              settings/db
+              (sql/format
+               {:insert-into :users
+                :columns [:username :password :status]
+                :values [[username password [:cast "active" :users_status]]]})) true]) (catch org.postgresql.util.PSQLException _ false)))

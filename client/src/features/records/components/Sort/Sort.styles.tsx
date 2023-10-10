@@ -47,6 +47,8 @@ export const SortButton = styled.button<{ $selected: boolean }>`
   flex-wrap: wrap;
   display: flex;
   padding: 5px 10px;
+  user-select: none;
+  cursor: pointer;
   border-radius: 5px;
   border: 1px solid #c2c2c2c2;
   color: #444444;

@@ -24,4 +24,10 @@
                  {:body {:id (:users/id user)
                          :username (:users/username user)
                          :status (:users/status user)}})}])
-              
+
+(def create-user
+  ["/create-user" {:middleware [(core-middlewares/schema-validator-middleware-factory {:post auth-schemas/create-user})]
+                   :post (fn [{:keys [body-params] :as _}]
+                           (if (auth-services/create-user (:username body-params) (:password body-params))
+                             {:body {:message "User created"} :status 201}
+                             {:body {:user-create-error ["User already exists"]} :status 400}))}])

@@ -91,7 +91,6 @@ function requests() {
     requestParams?: AxiosRequestConfig<D>,
     customParams?: CustomRequestParamsType
   ): Promise<ResponseType<ResponseData<R>, D>> {
-    console.log("On Request");
     const requestConfig = {
       method: method,
       url: getUrl(url),

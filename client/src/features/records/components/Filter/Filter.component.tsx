@@ -107,6 +107,56 @@ export default function Filter(props: Props) {
     ]);
   }
 
+  function getInputTypeByColumnDataType(
+    selectedColumn: (typeof props.columns)[number] | undefined,
+    isSplitted: boolean,
+    placeholder: string,
+    value: (typeof operationOptions)[number] | string | undefined,
+    filter: (typeof filtersState)[number],
+    onChange?: ((value: string) => void) | undefined
+  ) {
+    const isDateTypeSelected = selectedColumn?.dataType === "date";
+    const isOperationTypeSelected =
+      selectedColumn?.dataType === "operation-type";
+    const onChangeFunction = onChange
+      ? onChange
+      : (value: string) => {
+          filter.value = value;
+          setFiltersState([...filtersState]);
+        };
+    if (isOperationTypeSelected)
+      return (
+        <Selector
+          label="Operation type"
+          closeOnSelect={isSplitted}
+          searchPlaceholder={placeholder}
+          selectedOption={value as (typeof operationOptions)[number]}
+          options={operationOptions}
+          onSelectOption={(option) => onChangeFunction(option)}
+        />
+      );
+    else if (isDateTypeSelected)
+      return (
+        <Styled.FilterInputContainer
+          $isSplitted={isSplitted}
+          type="date"
+          placeholder={placeholder}
+          value={value as string}
+          onChange={(e) => onChangeFunction(e.target.value)}
+        />
+      );
+    else
+      return (
+        <Styled.FilterInputContainer
+          $isSplitted={false}
+          type="text"
+          placeholder="Value"
+          value={filter.value}
+          onChange={(e) => onChangeFunction(e.target.value)}
+        />
+      );
+  }
+
   return (
     <Styled.ButtonContainer ref={clickOutsideRef}>
       <Styled.FilterButton
@@ -138,8 +188,6 @@ export default function Filter(props: Props) {
                   selectedColumn?.dataType || "string"
                 );
               const isBetweenOperationSelected = filter.operation === "between";
-              const isOperationTypeSelected =
-                selectedColumn?.dataType === "operation-type";
               const selectedOperationTypeOption = operationOptions.find(
                 (operationOption) => operationOption.value === filter.value
               );
@@ -177,60 +225,47 @@ export default function Filter(props: Props) {
                   </Styled.SelectorContainer>
                   {isBetweenOperationSelected ? (
                     <Fragment>
-                      <Styled.FilterInputContainer
-                        $isSplitted={true}
-                        type="text"
-                        placeholder="Value"
-                        value={filter.value.split("<->")[0] || ""}
-                        onChange={(e) => {
+                      {getInputTypeByColumnDataType(
+                        selectedColumn,
+                        true,
+                        "Value",
+                        filter.value.split("<->")[0] || "",
+                        filter,
+                        (value) => {
                           const valueSplitted = filter.value.split("<->");
                           if (valueSplitted.length === 2) {
-                            filter.value = `${e.target.value}<->${valueSplitted[1]}`;
+                            filter.value = `${value}<->${valueSplitted[1]}`;
                           } else {
-                            filter.value = `${e.target.value}<->`;
+                            filter.value = `${value}<->`;
                           }
                           setFiltersState([...filtersState]);
-                        }}
-                      />
-                      <Styled.FilterInputContainer
-                        $isSplitted={true}
-                        type="text"
-                        placeholder="Value"
-                        value={filter.value.split("<->")[1] || ""}
-                        onChange={(e) => {
+                        }
+                      )}
+                      {getInputTypeByColumnDataType(
+                        selectedColumn,
+                        true,
+                        "Value",
+                        filter.value.split("<->")[1] || "",
+                        filter,
+                        (value) => {
                           const valueSplitted = filter.value.split("<->");
                           if (valueSplitted.length === 2) {
-                            filter.value = `${valueSplitted[0]}<->${e.target.value}`;
+                            filter.value = `${valueSplitted[0]}<->${value}`;
                           } else {
-                            filter.value = `<->${e.target.value}`;
+                            filter.value = `<->${value}`;
                           }
                           setFiltersState([...filtersState]);
-                        }}
-                      />
+                        }
+                      )}
                     </Fragment>
-                  ) : isOperationTypeSelected ? (
-                    <Selector
-                      label="Operation type"
-                      closeOnSelect={true}
-                      searchPlaceholder="Search for an operation"
-                      selectedOption={selectedOperationTypeOption}
-                      options={operationOptions}
-                      onSelectOption={(option) => {
-                        filter.value = option;
-                        setFiltersState([...filtersState]);
-                      }}
-                    />
                   ) : (
-                    <Styled.FilterInputContainer
-                      $isSplitted={false}
-                      type="text"
-                      placeholder="Value"
-                      value={filter.value}
-                      onChange={(e) => {
-                        filter.value = e.target.value;
-                        setFiltersState([...filtersState]);
-                      }}
-                    />
+                    getInputTypeByColumnDataType(
+                      selectedColumn,
+                      false,
+                      "",
+                      selectedOperationTypeOption,
+                      filter
+                    )
                   )}
                   <Styled.FilterButton
                     $selected={false}
@@ -257,19 +292,12 @@ export default function Filter(props: Props) {
                   onAddFilterClick();
                 }}
               >
-                {"+"}
+                {"Add new filter"}
               </Styled.FilterButton>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <Styled.ResetAndApplyButtonsContainer>
                 <Styled.FilterButton
                   $selected={false}
                   type="button"
-                  disabled={filtersState?.length === 0}
                   onClick={(e) => {
                     e.preventDefault();
                     props.onApply([]);
@@ -296,7 +324,7 @@ export default function Filter(props: Props) {
                 >
                   {"Apply"}
                 </Styled.FilterButton>
-              </div>
+              </Styled.ResetAndApplyButtonsContainer>
             </Styled.BottomButtonsContainer>
           </Styled.DropdownInnerContainer>
         </Styled.DropdownContainer>

@@ -9,7 +9,7 @@ export const DropdownContainer = styled.div`
   margin-top: 5px;
   border-radius: 10px;
   width: 60vw;
-  max-width: 500px;
+  max-width: 550px;
   min-width: 400px;
   background-color: white;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.16),
@@ -54,6 +54,8 @@ export const FilterButton = styled.button<{ $selected: boolean }>`
   flex-wrap: wrap;
   display: flex;
   padding: 5px 10px;
+  user-select: none;
+  cursor: pointer;
   border-radius: 5px;
   border: 1px solid #c2c2c2c2;
   color: #444444;
@@ -64,4 +66,10 @@ export const FilterButton = styled.button<{ $selected: boolean }>`
 
 export const FilterIconContainer = styled.div`
   margin-left: 5px;
+`;
+
+export const ResetAndApplyButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 `;

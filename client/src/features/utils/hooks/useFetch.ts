@@ -4,11 +4,9 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 
-import { OptionalUseFetchParamsType, PaginatedData } from "./types";
+import { OptionalUseFetchParamsType } from "./types";
 import api from "../utils/api";
-import { callPaginationCallback } from "../utils";
 import { validateData, ValidationError } from "../utils/validate";
-import { ResponseData } from "../utils/api/types";
 import { useCallback } from "react";
 
 /**
@@ -89,7 +87,6 @@ export default function useFetch<T extends object | T[]>(
   url: string,
   options?: OptionalUseFetchParamsType<T>
 ) {
-  console.log("useFetch", queryKey, url, options);
   const { isLoading, error, data, isFetching, isPreviousData, refetch } =
     useQuery<T, ValidationError<T>>({
       queryKey,
@@ -112,12 +109,6 @@ export default function useFetch<T extends object | T[]>(
     );
     const responseData: T = response.data.data;
     const isResponseAnArray = Array.isArray(responseData);
-
-    /*if (options?.paginationCallback && "pagination" in response.data.data)
-      await callPaginationCallback<T>(
-        response.data as ResponseData<PaginatedData<T>>,
-        options.paginationCallback
-      );*/
 
     updateState(responseData);
     if (isResponseAnArray) {

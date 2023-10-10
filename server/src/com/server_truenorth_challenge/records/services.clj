@@ -55,4 +55,7 @@
                        :user_balance (:records/user_balance value)
                        :operation_response (:records/operation_response value)
                        :date (:records/date value)}) (:records data-from-db))}))
-    
+
+(defn remove-record
+  [user-id record-id]
+  (records-repository/records-remove-record-by-id-and-user-id record-id user-id))

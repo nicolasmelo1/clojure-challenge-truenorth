@@ -114,23 +114,23 @@ export default function Sort(props: Props) {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  props.onApply(sortsState);
-                  setIsSortOpen(false);
-                }}
-              >
-                {"Apply"}
-              </Styled.SortButton>
-              <Styled.SortButton
-                $selected={false}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
                   setSortsState([]);
                   props.onApply([]);
                   setIsSortOpen(false);
                 }}
               >
                 {"Reset"}
+              </Styled.SortButton>
+              <Styled.SortButton
+                $selected={true}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.onApply(sortsState);
+                  setIsSortOpen(false);
+                }}
+              >
+                {"Apply"}
               </Styled.SortButton>
             </Styled.BottomButtonsContainer>
           </Styled.DropdownInnerContainer>
