@@ -1,4 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { Selector } from "../../../utils";
 import * as Styled from "./Filter.styles";
@@ -9,7 +11,7 @@ type Props = {
   columns: {
     value: string;
     label: string;
-    dataType: "number" | "string" | "date";
+    dataType: "number" | "string" | "date" | "operation-type";
   }[];
   filters: {
     field: string;
@@ -48,6 +50,16 @@ export default function Filter(props: Props) {
       { label: "is not equal", value: "not-equal" },
     ];
   }, []);
+  const operationOptions = useMemo(() => {
+    return [
+      { label: "Addition", value: "addition" },
+      { label: "Subtraction", value: "subtraction" },
+      { label: "Multiplication", value: "multiplication" },
+      { label: "Division", value: "division" },
+      { label: "Square root", value: "square_root" },
+      { label: "Random String", value: "random_string" },
+    ];
+  }, []);
 
   const clickOutsideRef = useClickOutside(() => {
     onCloseFilter();
@@ -71,9 +83,9 @@ export default function Filter(props: Props) {
   }
 
   function getFilteredOperationOptionsByColumnDataType(
-    columnDataType: "number" | "string" | "date"
+    columnDataType: "number" | "string" | "date" | "operation-type"
   ) {
-    if (columnDataType === "string")
+    if (columnDataType === "string" || columnDataType === "operation-type")
       return filterOperationOptions.filter(
         (filterOperationOption) =>
           !["between", "greater-than", "less-than"].includes(
@@ -97,7 +109,8 @@ export default function Filter(props: Props) {
 
   return (
     <Styled.ButtonContainer ref={clickOutsideRef}>
-      <button
+      <Styled.FilterButton
+        $selected={isShowingFilter}
         type="button"
         onClick={(e) => {
           e.preventDefault();
@@ -109,7 +122,10 @@ export default function Filter(props: Props) {
               props.filters.length > 1 ? "filters" : "filter"
             } selected`
           : "Add filter"}
-      </button>
+        <Styled.FilterIconContainer>
+          <FontAwesomeIcon icon={faFilter} />
+        </Styled.FilterIconContainer>
+      </Styled.FilterButton>
       {isShowingFilter ? (
         <Styled.DropdownContainer>
           <Styled.DropdownInnerContainer>
@@ -122,6 +138,11 @@ export default function Filter(props: Props) {
                   selectedColumn?.dataType || "string"
                 );
               const isBetweenOperationSelected = filter.operation === "between";
+              const isOperationTypeSelected =
+                selectedColumn?.dataType === "operation-type";
+              const selectedOperationTypeOption = operationOptions.find(
+                (operationOption) => operationOption.value === filter.value
+              );
               return (
                 <Styled.DropdownInputContainer key={filter.uuid}>
                   <Styled.SelectorContainer>
@@ -187,6 +208,18 @@ export default function Filter(props: Props) {
                         }}
                       />
                     </Fragment>
+                  ) : isOperationTypeSelected ? (
+                    <Selector
+                      label="Operation type"
+                      closeOnSelect={true}
+                      searchPlaceholder="Search for an operation"
+                      selectedOption={selectedOperationTypeOption}
+                      options={operationOptions}
+                      onSelectOption={(option) => {
+                        filter.value = option;
+                        setFiltersState([...filtersState]);
+                      }}
+                    />
                   ) : (
                     <Styled.FilterInputContainer
                       $isSplitted={false}
@@ -199,7 +232,8 @@ export default function Filter(props: Props) {
                       }}
                     />
                   )}
-                  <button
+                  <Styled.FilterButton
+                    $selected={false}
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
@@ -209,12 +243,14 @@ export default function Filter(props: Props) {
                     }}
                   >
                     {"Remove"}
-                  </button>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Styled.FilterButton>
                 </Styled.DropdownInputContainer>
               );
             })}
             <Styled.BottomButtonsContainer>
-              <button
+              <Styled.FilterButton
+                $selected={true}
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
@@ -222,9 +258,16 @@ export default function Filter(props: Props) {
                 }}
               >
                 {"+"}
-              </button>
-              <div>
-                <button
+              </Styled.FilterButton>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Styled.FilterButton
+                  $selected={false}
                   type="button"
                   disabled={filtersState?.length === 0}
                   onClick={(e) => {
@@ -234,8 +277,9 @@ export default function Filter(props: Props) {
                   }}
                 >
                   {"Reset"}
-                </button>
-                <button
+                </Styled.FilterButton>
+                <Styled.FilterButton
+                  $selected={true}
                   type="button"
                   disabled={filtersState?.length === 0}
                   onClick={(e) => {
@@ -251,7 +295,7 @@ export default function Filter(props: Props) {
                   }}
                 >
                   {"Apply"}
-                </button>
+                </Styled.FilterButton>
               </div>
             </Styled.BottomButtonsContainer>
           </Styled.DropdownInnerContainer>

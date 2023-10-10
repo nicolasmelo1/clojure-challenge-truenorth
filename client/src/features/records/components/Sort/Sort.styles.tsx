@@ -24,6 +24,8 @@ export const DropdownInnerContainer = styled.div`
 export const ColumnButtonContainer = styled.div`
   width: 100%;
   display: flex;
+  margin-bottom: 2px;
+  margin-top: 2px;
   justify-content: space-between;
   flex-direction: row;
 `;
@@ -32,13 +34,35 @@ export const SelectorContainer = styled.div`
   width: 120px;
 `;
 
+export const SortColumnLabel = styled.label`
+  font-family: "Arial";
+  font-size: 12px;
+`;
+export const SortColumnRow = styled.label``;
+
+export const SortButton = styled.button<{ $selected: boolean }>`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #c2c2c2c2;
+  color: #444444;
+  background-color: ${({ $selected }) =>
+    $selected ? "#c2c2c2c2" : "transparent"};
+  margin: 1px;
+`;
+
+export const SortIconContainer = styled.div`
+  margin-left: 5px;
+`;
+
 export const BottomButtonsContainer = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
   justify-content: space-between;
   width: 100%;
-`;
-
-export const FilterInputContainer = styled.input<{ isSplitted: boolean }>`
-  width: ${(props) => (props.isSplitted ? `20%` : "40%")};
 `;

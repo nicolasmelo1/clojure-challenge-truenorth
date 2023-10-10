@@ -6,11 +6,11 @@ import Root from "./App";
 import { recordsRoute } from "./features/records/routes";
 import { loginRoutes } from "./features/login/routes";
 import { useAppReady } from "./features/utils";
+import { Fragment } from "react";
 
 export const authenticatedRoute = new Route({
   id: "authenticated",
   path: "/app",
-  beforeLoad: () => {},
   component: () => {
     const { isAppReady, isAuthenticated } = useAppReady();
 
@@ -20,7 +20,11 @@ export const authenticatedRoute = new Route({
       setTimeout(() => router.navigate({ to: "/login" }), 1);
       return null;
     }
-    return <Root />;
+    return (
+      <Fragment>
+        <Root />
+      </Fragment>
+    );
   },
   getParentRoute: () => rootRoute,
 });

@@ -1,4 +1,11 @@
 import { useMemo, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSort,
+  faSortUp,
+  faSortDown,
+} from "@fortawesome/free-solid-svg-icons";
+
 import { useClickOutside } from "../../../utils/hooks";
 import * as Styled from "./Sort.styles";
 import { Selector } from "../../../utils";
@@ -20,11 +27,11 @@ export default function Sort(props: Props) {
   const sortOptions = useMemo(() => {
     return [
       {
-        label: "Asc",
+        label: () => <FontAwesomeIcon icon={faSortUp} />,
         value: "asc",
       },
       {
-        label: "Desc",
+        label: () => <FontAwesomeIcon icon={faSortDown} />,
         value: "desc",
       },
     ];
@@ -36,7 +43,8 @@ export default function Sort(props: Props) {
 
   return (
     <Styled.ButtonContainer ref={clickOutsideRef}>
-      <button
+      <Styled.SortButton
+        $selected={isSortOpen}
         type="button"
         onClick={(e) => {
           e.preventDefault();
@@ -48,7 +56,10 @@ export default function Sort(props: Props) {
               props.sorts.length > 1 ? "sorts" : "sort"
             } selected`
           : "Sort"}
-      </button>
+        <Styled.SortIconContainer>
+          <FontAwesomeIcon icon={faSort} />
+        </Styled.SortIconContainer>
+      </Styled.SortButton>
       {isSortOpen ? (
         <Styled.DropdownContainer>
           <Styled.DropdownInnerContainer>
@@ -62,9 +73,11 @@ export default function Sort(props: Props) {
 
               return (
                 <Styled.ColumnButtonContainer key={column.value}>
-                  <label>{column.label}</label>
+                  <Styled.SortColumnLabel>
+                    {column.label}
+                  </Styled.SortColumnLabel>
                   <Selector
-                    label="Asc/Desc"
+                    label={<FontAwesomeIcon icon={faSort} />}
                     showSearch={false}
                     clickOnSameOptionToUnselect={true}
                     closeOnSelect={true}
@@ -95,17 +108,31 @@ export default function Sort(props: Props) {
                 </Styled.ColumnButtonContainer>
               );
             })}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                console.log("apply");
-                props.onApply(sortsState);
-                setIsSortOpen(false);
-              }}
-            >
-              {"Apply"}
-            </button>
+            <Styled.BottomButtonsContainer>
+              <Styled.SortButton
+                $selected={false}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.onApply(sortsState);
+                  setIsSortOpen(false);
+                }}
+              >
+                {"Apply"}
+              </Styled.SortButton>
+              <Styled.SortButton
+                $selected={false}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSortsState([]);
+                  props.onApply([]);
+                  setIsSortOpen(false);
+                }}
+              >
+                {"Reset"}
+              </Styled.SortButton>
+            </Styled.BottomButtonsContainer>
           </Styled.DropdownInnerContainer>
         </Styled.DropdownContainer>
       ) : null}

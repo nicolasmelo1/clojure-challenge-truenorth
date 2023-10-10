@@ -8,7 +8,14 @@ export default function CalculatorPage() {
   const [userBalance, setUserBalance] = useState(0);
 
   return (
-    <Styled.CalculatorPageContainer>
+    <Styled.Container>
+      <Styled.TitleContainer>
+        <Styled.PageLink to="/app/records" $selected={false}>
+          User Records
+        </Styled.PageLink>
+        <Styled.PageTitleDivisor>{"/"}</Styled.PageTitleDivisor>
+        <Styled.PageTitle $selected={true}>Calculator</Styled.PageTitle>
+      </Styled.TitleContainer>
       <Styled.CalculatorContainer>
         <Input
           label="Calculation"
@@ -47,6 +54,6 @@ export default function CalculatorPage() {
           <button>{"="}</button>
         </Styled.ButtonsRow>
       </Styled.CalculatorContainer>
-    </Styled.CalculatorPageContainer>
+    </Styled.Container>
   );
 }

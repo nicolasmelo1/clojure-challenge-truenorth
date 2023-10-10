@@ -7,12 +7,13 @@ import {
 
 import { Filter, Sort } from "../../components";
 import * as Styled from "./RecordsPage.styles";
-import { useRecords } from "../../hookts";
+import { useRecords } from "../../hooks";
 import {
   operationsReferenceTable,
   convertNumberToMoney,
   convertIsoDateToDate,
 } from "../../utils";
+import { useMemo } from "react";
 
 const columns: ColumnDef<{
   operation_type: string;
@@ -76,17 +77,46 @@ export default function RecordsPage() {
     setSortsState,
     filtersState,
     setFiltersState,
+    setPage,
+    page: currentPage,
+    total,
   } = useRecords();
+
+  const pages = useMemo(() => {
+    const pages = [];
+    const maxNumberOfShownPages = 10;
+    const startingPage =
+      currentPage - maxNumberOfShownPages / 2 > 0
+        ? currentPage - maxNumberOfShownPages / 2 + maxNumberOfShownPages <
+          total
+          ? currentPage - maxNumberOfShownPages / 2
+          : total - maxNumberOfShownPages
+        : 1;
+    console.log(startingPage + maxNumberOfShownPages < total);
+    for (
+      let i = Math.ceil(startingPage);
+      i < total && i < startingPage + maxNumberOfShownPages;
+      i++
+    )
+      pages.push(i);
+    return pages;
+  }, [currentPage, total]);
 
   const table = useReactTable({
     data: records,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  console.log("aqui");
+
   return (
     <Styled.Container>
-      <h1>Recorddds</h1>
+      <Styled.TitleContainer>
+        <Styled.PageTitle $selected={true}>User Records</Styled.PageTitle>
+        <Styled.PageTitleDivisor>{"/"}</Styled.PageTitleDivisor>
+        <Styled.PageLink to="/app/operations/calculator" $selected={false}>
+          Calculator
+        </Styled.PageLink>
+      </Styled.TitleContainer>
       <Styled.TopButtonsContainer>
         <Styled.SortAndFilterButtons>
           <Filter
@@ -95,7 +125,9 @@ export default function RecordsPage() {
               value: column.id || "",
               dataType: (["amount", "userBalance"].includes(column.id || "")
                 ? "number"
-                : "string") as "string" | "number" | "date",
+                : column.id === "operation_type"
+                ? "operation-type"
+                : "string") as "string" | "number" | "date" | "operation-type",
             }))}
             filters={filtersState}
             onApply={(filters) => setFiltersState(filters)}
@@ -115,8 +147,22 @@ export default function RecordsPage() {
           </Styled.SortButton>
         </Styled.SortAndFilterButtons>
       </Styled.TopButtonsContainer>
+      <Styled.PagesContainer>
+        {pages.map((page) => (
+          <Styled.PageButton
+            $selected={page === currentPage}
+            key={page}
+            onClick={(e) => {
+              e.preventDefault();
+              if (page !== currentPage) setPage(page);
+            }}
+          >
+            {page}
+          </Styled.PageButton>
+        ))}
+      </Styled.PagesContainer>
       <Styled.TableContainer>
-        <table>
+        <Styled.Table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -144,23 +190,7 @@ export default function RecordsPage() {
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            {table.getFooterGroups().map((footerGroup) => (
-              <tr key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </tfoot>
-        </table>
+        </Styled.Table>
       </Styled.TableContainer>
     </Styled.Container>
   );

@@ -10,7 +10,7 @@
   (cond (= key :id) [:cast value :int]
         (= key :user-id) [:cast value :int]
         (= key :operation-id) [:cast value :id]
-        (= key :operation-response) [:cast value :double-precision]
+        (= key :operation-response) [:cast value :varchar]
         (= key :operations.type) [:cast value :operations_type]
         (= key :amount) [:cast value :double-precision]
         (= key :user-balance) [:cast value :double-precision]

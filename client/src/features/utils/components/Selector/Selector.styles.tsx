@@ -7,10 +7,13 @@ export const Container = styled.div`
 export const DropdownContainer = styled.div`
   position: absolute;
   z-index: 2;
-  margin-top: 5px;
+  padding: 5px;
   border-radius: 10px;
   border-color: #f2f2f2;
   background-color: white;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.16),
+    0 3px 4px rgba(0, 0, 0, 0.06), 0 6px 8px rgba(0, 0, 0, 0.06),
+    0 12px 16px rgba(0, 0, 0, 0.08), 0 18px 32px rgba(0, 0, 0, 0.06);
 `;
 
 export const OptionsList = styled.div`
@@ -20,5 +23,11 @@ export const OptionsList = styled.div`
 
 export const Option = styled.button`
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 5px;
+  border: 1px solid #c2c2c2c2;
+  border-radius: 5px;
   width: 100%;
 `;

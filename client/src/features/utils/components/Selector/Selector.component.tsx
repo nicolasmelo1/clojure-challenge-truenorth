@@ -3,7 +3,7 @@ import * as Styled from "./Selector.styles";
 import { useClickOutside } from "../../hooks";
 
 type Props<TClickOnSameOptionToUnselect extends boolean = false> = {
-  label: string;
+  label: JSX.Element | string;
   searchPlaceholder?: string;
   onSelectOption?: (
     option:
@@ -17,7 +17,7 @@ type Props<TClickOnSameOptionToUnselect extends boolean = false> = {
   clickOnSameOptionToUnselect?: TClickOnSameOptionToUnselect;
   showSearch?: boolean;
   options: {
-    label: string;
+    label: string | (() => JSX.Element);
     value: string;
   }[];
 };
@@ -69,15 +69,19 @@ export default function Selector<
   }, [props.selectedOption]);
   return (
     <Styled.Container ref={clickOutsideRef}>
-      <button
+      <Styled.Option
         type="button"
         onClick={(e) => {
           e.preventDefault();
           setIsDropdownOpen(!isDropdownOpen);
         }}
       >
-        {selectedOption ? selectedOption.label : props.label}
-      </button>
+        {selectedOption
+          ? typeof selectedOption.label === "string"
+            ? selectedOption.label
+            : selectedOption.label()
+          : props.label}
+      </Styled.Option>
       {isDropdownOpen ? (
         <Styled.DropdownContainer>
           {props.showSearch !== false ? (
@@ -89,7 +93,9 @@ export default function Selector<
                 setFilter(e.target.value);
                 setOptions(
                   props.options.filter((option) =>
-                    option.label.includes(e.target.value)
+                    typeof option.label === "string"
+                      ? option.label.includes(e.target.value)
+                      : true
                   )
                 );
               }}
@@ -105,7 +111,9 @@ export default function Selector<
                   onSelectOption(option);
                 }}
               >
-                {option.label}
+                {typeof option.label === "string"
+                  ? option.label
+                  : option.label()}
               </Styled.Option>
             ))}
           </Styled.OptionsList>

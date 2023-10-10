@@ -17,7 +17,7 @@ export default function useClickOutside(
     if (ref.current && !ref.current.contains(event.target as Node))
       return callback();
   }
-  /*
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -25,6 +25,6 @@ export default function useClickOutside(
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-*/
+
   return ref;
 }

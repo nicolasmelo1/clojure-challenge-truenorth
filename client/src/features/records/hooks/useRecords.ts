@@ -12,6 +12,7 @@ export default function useRecords() {
       id: number;
     }[]
   >([]);
+  const [total, setTotal] = useState(1);
   const [page, setPage] = useState(1);
   const [filtersState, _setFiltersState] = useState<
     {
@@ -110,17 +111,20 @@ export default function useRecords() {
         }>("/records", { params: searchParams }, { isAuthenticated: true })
         .then((response) => {
           console.log(response.response.data.data);
-          if (response.response.data.data)
+          if (response.response.data.data) {
+            setTotal(response.response.data.data.pagination.total);
             setData(response.response.data.data.records);
+          }
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, stringfiedSorts, page, stringfiedFilters]);
 
-  console.log("data");
   return {
     data: data,
     error: {},
     page,
+    total,
     setPage,
     filtersState,
     setFiltersState: (filters: typeof filtersState) => {

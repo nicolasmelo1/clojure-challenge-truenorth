@@ -8,7 +8,7 @@ export const DropdownContainer = styled.div`
   position: absolute;
   margin-top: 5px;
   border-radius: 10px;
-  width: 50vw;
+  width: 60vw;
   max-width: 500px;
   min-width: 400px;
   background-color: white;
@@ -26,6 +26,7 @@ export const DropdownInputContainer = styled.div`
   flex-direction: row;
   margin-bottom: 6px;
   margin-top: 6px;
+  justify-content: space-between;
 `;
 
 export const SelectorContainer = styled.div`
@@ -40,5 +41,27 @@ export const BottomButtonsContainer = styled.div`
 `;
 
 export const FilterInputContainer = styled.input<{ $isSplitted: boolean }>`
-  width: ${(props) => (props.$isSplitted ? `20%` : "40%")};
+  border: 1px solid #c2c2c2c2;
+  border-radius: 5px;
+  padding: 3px 10px;
+  width: ${(props) => (props.$isSplitted ? `20%` : "20%")};
+`;
+
+export const FilterButton = styled.button<{ $selected: boolean }>`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #c2c2c2c2;
+  color: #444444;
+  background-color: ${({ $selected }) =>
+    $selected ? "#c2c2c2c2" : "transparent"};
+  margin: 1px;
+`;
+
+export const FilterIconContainer = styled.div`
+  margin-left: 5px;
 `;
