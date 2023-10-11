@@ -5,10 +5,11 @@
                                                         [clojure.string :as str]
                                                         [pod.babashka.postgresql.transaction :as tx]))
 
+
 (defn get-files-sorted-and-until-if-defined
   [files until]
   (if (string? until)
-    (take-while #(str/includes? (.getName %) until) (reverse (sort-by #(.getName %) files)))
+    (utils/take-while-plus-one #(not (str/includes? (.getName %) until)) (reverse (sort-by #(.getName %) files)))
     (reverse (sort-by #(.getName %) files))))
 
 (defn get-down-migrations

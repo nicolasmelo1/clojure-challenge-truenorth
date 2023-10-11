@@ -15,11 +15,13 @@
          :dbname (get-env-variable "DB_NAME" str "postgres")
          :password (get-env-variable "DB_PASS" str "")
          :host (get-env-variable "DB_HOST" str "localhost")
-         :port (get-env-variable "DB_PORT" str "5432")})
+         :port (get-env-variable "DB_PORT" str "5432")
+         :sslmode (get-env-variable "DB_SSLMODE" str "disable")})
 
 (defn migrate
   "This will run all of your pending migrations. This works similarly to Migratus library. But i needed to do it by hand."
   []
+  (println "Running migrations")
   (migrate/migrate db migrations-location migrations-table-name))
 
 (defn rollback
@@ -32,7 +34,7 @@
   [until]
   (rollback/rollback db migrations-location migrations-table-name {:until until}))
 
-(defn create
+(defn makemigration
   "Function used for creating a new migration file. Please provide the name of your migration."
   [migration-name]
   (let [current-time (quot (System/currentTimeMillis) 1000)

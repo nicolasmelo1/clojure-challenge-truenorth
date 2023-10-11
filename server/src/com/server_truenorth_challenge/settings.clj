@@ -28,4 +28,5 @@
          :dbname (get-env-variable "DB_NAME" str "postgres")
          :password (get-env-variable "DB_PASS" str "")
          :host (get-env-variable "DB_HOST" str "localhost")
-         :port (get-env-variable "DB_PORT" str "5432")})
+         :port (get-env-variable "DB_PORT" str "5432")
+         :sslmode (get-env-variable "DB_SSLMODE" str "disable")})

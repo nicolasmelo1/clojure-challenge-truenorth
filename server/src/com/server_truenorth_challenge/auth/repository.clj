@@ -30,6 +30,10 @@
 (defn users-insert-new-with-username-and-password
   [username password]
   (try
+    (println (sql/format
+              {:insert-into :users
+               :columns [:username :password :status]
+               :values [[username password [:cast "active" :users_status]]]}))
     (second [(jdbc/execute!
               settings/db
               (sql/format

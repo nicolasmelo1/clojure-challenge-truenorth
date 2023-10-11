@@ -13,7 +13,7 @@
          migrate            com.server-truenorth-challenge.tasks/migrate
          rollback           com.server-truenorth-challenge.tasks/rollback
          rollback-until     com.server-truenorth-challenge.tasks/rollback-until
-         create             com.server-truenorth-challenge.tasks/create
+         makemigration      com.server-truenorth-challenge.tasks/makemigration
 
          ;; Used for interacting with production.
          deploy           com.biffweb.tasks/deploy

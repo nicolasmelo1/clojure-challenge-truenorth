@@ -8,7 +8,8 @@ import { api } from "./features/utils";
 
 const client = new QueryClient();
 
-api.setApiPath("http://localhost:8080");
+console.log(import.meta.env.VITE_SEVER_HOST);
+api.setApiPath(import.meta.env.VITE_SEVER_HOST || "http://localhost:8080");
 api.setPrefix("v1");
 api.setSecureStorage(localStorage);
 api.setStorage(localStorage);

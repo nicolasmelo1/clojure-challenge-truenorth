@@ -32,6 +32,25 @@ export const authenticatedRoute = new Route({
   getParentRoute: () => rootRoute,
 });
 
+export const indexRoute = new Route({
+  id: "index",
+  path: "/",
+  component: () => {
+    const { isAppReady, isAuthenticated } = useAppReady();
+    if (!isAppReady) return null;
+    if (!isAuthenticated)
+      setTimeout(() => router.navigate({ to: "/login" }), 1);
+    else
+      setTimeout(
+        () => router.navigate({ to: "/app/operations/calculator" }),
+        1
+      );
+
+    return null;
+  },
+  getParentRoute: () => rootRoute,
+});
+
 export const unauthenticatedRoute = new Route({
   id: "unauthenticated",
   path: "/",
@@ -44,7 +63,7 @@ export const unauthenticatedRoute = new Route({
 export const rootRoute = new RootRoute();
 
 const routeTree = rootRoute.addChildren([
-  unauthenticatedRoute.addChildren([loginRoutes, registerRoutes]),
+  unauthenticatedRoute.addChildren([indexRoute, loginRoutes, registerRoutes]),
   authenticatedRoute.addChildren([
     operationsRoute,
     randomStringRoute,
