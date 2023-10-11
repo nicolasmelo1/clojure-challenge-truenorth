@@ -1,33 +1,50 @@
 (ns com.server-truenorth-challenge.operations.services.parser)
 
-(defn factor [{:keys [token] :as lexer}]
+(defn factor [{:keys [token] :as lexer} term expression]
   (cond
     (= (:type token) :integer) {:lexer ((:get-next-token lexer))
                                 :node token}
     (= (:type token) :float) {:lexer ((:get-next-token lexer))
                               :node token}
+    (= (:type token) :minus) (let [next-lexer ((:get-next-token lexer))
+                                   {:keys [lexer node]} (factor next-lexer term expression)]
+                               {:lexer lexer
+                                :node {:type :unary-minus
+                                       :cost 0
+                                       :operation-id nil
+                                       :token node
+                                       :operation token}})
+    (= (:type token) :plus) (let [next-lexer ((:get-next-token lexer))
+                                  {:keys [lexer node]} (factor next-lexer term expression)]
+                              {:lexer lexer
+                               :node {:type :unary-plus
+                                      :cost 0
+                                      :operation-id nil
+                                      :token node
+                                      :operation token}})
     (= (:type token) :lparen) (let [next-lexer ((:get-next-token lexer))
-                                    {:keys [lexer node]} ((resolve 'com.server-truenorth-challenge.interpreter.parser/expression) next-lexer)
+                                    {:keys [lexer node]} (expression next-lexer)
                                     r-paren-token-lexer ((:get-next-token lexer))]
+
                                 {:lexer ((:get-next-token r-paren-token-lexer))
                                  :node node})
     (= (:type token) :square-root) {:lexer ((:get-next-token lexer))
                                     :node token}
     :else (throw (ex-info "Invalid syntax" {:error :invalid-syntax :token token}))))
 
-(defn term [initial-lexer]
-  (let [{:keys [lexer node] :as lexer-and-node} (factor initial-lexer)
+(defn term [initial-lexer expression]
+  (let [{:keys [lexer node] :as lexer-and-node} (factor initial-lexer term expression)
         token (:token lexer)
         next-lexer ((:get-next-token lexer))]
     (cond
-      (= (:type token) :multiply) (let [term-lexer (term next-lexer)]
+      (= (:type token) :multiply) (let [term-lexer (term next-lexer expression)]
                                     {:lexer (:lexer term-lexer)
                                      :node {:type :multiply
                                             :cost (:cost token)
                                             :operation-id (:operation-id token)
                                             :left node
                                             :right (:node term-lexer)}})
-      (= (:type token) :divide) (let [term-lexer (term next-lexer)]
+      (= (:type token) :divide) (let [term-lexer (term next-lexer expression)]
                                   {:lexer (:lexer term-lexer)
                                    :node {:type :divide
                                           :cost (:cost token)
@@ -37,7 +54,7 @@
       :else lexer-and-node)))
 
 (defn expression [initial-lexer]
-  (let [{:keys [lexer node] :as lexer-and-node} (term initial-lexer)
+  (let [{:keys [lexer node] :as lexer-and-node} (term initial-lexer expression)
         token (:token lexer)
         next-lexer ((:get-next-token lexer))]
     (cond

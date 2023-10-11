@@ -30,7 +30,15 @@
   (rollback/rollback db migrations-location migrations-table-name {:until nil}))
 
 (defn rollback-until
-  "This function will rollback all the migrations that have been run until a certain migration name"
+  "This function will rollback all the migrations that have been run until a certain migration name.
+   
+   **Take Note**: We use `includes` function to get the migration name so you can use a part of the name. Also it's best practice if you specify the name with the `.down` extension.
+
+   ### Example:
+   ```shell
+   $ bb run rollback-until operations.down
+   ```
+   "
   [until]
   (rollback/rollback db migrations-location migrations-table-name {:until until}))
 

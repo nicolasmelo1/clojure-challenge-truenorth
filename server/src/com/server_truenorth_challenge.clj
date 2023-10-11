@@ -41,7 +41,7 @@
   (biff/add-libs)
   (biff/eval-files! ctx)
   (generate-assets! ctx)
-  (test/run-all-tests #"com.server-truenorth-challenge.test.*"))
+  (test/run-all-tests #"com.server-truenorth-challenge.*.test.*"))
 
 (def malli-opts
   {:registry (malr/composite-registry

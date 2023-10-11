@@ -13,12 +13,15 @@
           new-user-balance (- user-balance total-cost)
           does-user-have-enough-money? (>= new-user-balance 0)]
       (if does-user-have-enough-money?
-        (let [{:keys [node amounts]} (interpreter/evaluate abstract-syntax-tree user-balance)
-              _ (if (> (count amounts) 0) (operations-repository/records-bulk-insert user-id (reverse amounts)), nil)]
-          {:is-valid true
-           :reason nil
-           :data {:result node
-                  :balance new-user-balance}})
+        (try
+          (let [{:keys [node amounts]} (interpreter/evaluate abstract-syntax-tree user-balance)
+                _ (if (> (count amounts) 0) (operations-repository/records-bulk-insert user-id (reverse amounts)), nil)]
+            {:is-valid true
+             :reason nil
+             :data {:result node
+                    :balance new-user-balance}}) (catch Throwable e (if (-> e ex-data :error (= :invalid-syntax)) {:is-valid false
+                                                                                                                   :reason :invalid-syntax
+                                                                                                                   :data nil} (throw e))))
         {:is-valid false
          :reason :not-enough-money
          :data nil}))

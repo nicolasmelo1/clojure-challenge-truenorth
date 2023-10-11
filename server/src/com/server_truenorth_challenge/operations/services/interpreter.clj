@@ -1,7 +1,7 @@
 (ns com.server-truenorth-challenge.operations.services.interpreter)
 
 (defn- visit-binary-operations
-  [{:keys [node amounts user-balance]} operation operation-type]
+  [{:keys [node amounts user-balance]} operation operation-type visit]
   (let [new-user-balance (- user-balance (:cost node))
         left-node {:node (-> node :left)
                    :amounts amounts
@@ -9,8 +9,8 @@
         right-node {:node (-> node :right)
                     :amounts amounts
                     :user-balance (:user-balance left-node)}
-        result-of-left-node ((resolve 'com.server-truenorth-challenge.operations.services.interpreter/visit) left-node)
-        result-of-right-node ((resolve 'com.server-truenorth-challenge.operations.services.interpreter/visit) right-node)
+        result-of-left-node (visit left-node)
+        result-of-right-node (visit right-node)
         result (operation (:node result-of-left-node) (:node result-of-right-node))]
     {:node result
      :amounts (concat amounts (:amounts result-of-left-node) (:amounts result-of-right-node) [{:operation-type operation-type
@@ -49,6 +49,7 @@
    least, the result of each operation, so we can keep track of each operation that was made.\n
    "
   [{:keys [node amounts user-balance] :as node-amounts-and-user-balance}]
+
   (cond
     (= (:type node) :integer) {:node (Float/parseFloat (:value node))
                                :amounts amounts
@@ -56,12 +57,22 @@
     (= (:type node) :float) {:node (Float/parseFloat (:value node))
                              :amounts amounts
                              :user-balance user-balance}
-    (= (:type node) :plus) (visit-binary-operations node-amounts-and-user-balance + :addition)
-    (= (:type node) :minus) (visit-binary-operations node-amounts-and-user-balance - :subtraction)
-    (= (:type node) :multiply) (visit-binary-operations node-amounts-and-user-balance * :multiplication)
-    (= (:type node) :divide)  (visit-binary-operations node-amounts-and-user-balance / :division)
+    (= (:type node) :unary-minus) {:node (- (-> {:node (:token node)
+                                                 :amount amounts
+                                                 :user-balance user-balance} visit :node))
+                                   :amounts amounts
+                                   :user-balance user-balance}
+    (= (:type node) :unary-plus) {:node (+ (-> {:node (:token node)
+                                                :amount amounts
+                                                :user-balance user-balance} visit :node))
+                                  :amounts amounts
+                                  :user-balance user-balance}
+    (= (:type node) :plus) (visit-binary-operations node-amounts-and-user-balance + :addition visit)
+    (= (:type node) :minus) (visit-binary-operations node-amounts-and-user-balance - :subtraction visit)
+    (= (:type node) :multiply) (visit-binary-operations node-amounts-and-user-balance * :multiplication visit)
+    (= (:type node) :divide)  (visit-binary-operations node-amounts-and-user-balance / :division visit)
     (= (:type node) :square-root) (visit-square-root node-amounts-and-user-balance)
-    :else (throw (Exception. "Invalid syntax"))))
+    :else (throw (ex-info "Invalid syntax" {:error :invalid-syntax}))))
 
 (defn evaluate [abstract-syntax-tree user-balance]
   (visit {:node abstract-syntax-tree
