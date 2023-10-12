@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import * as Styled from "./Headers.styles";
-import { useLogout } from "../../../login";
 
 type Props = {
   isLogged?: boolean;
@@ -8,22 +7,28 @@ type Props = {
     title: string;
     link?: string;
   }[];
+  isStorybook?: boolean;
+  logout: () => void;
 };
-export default function Headers(props: Props) {
-  const logout = useLogout();
-
+export default function HeadersLayout(props: Props) {
   return (
     <Styled.TitleContainer>
       {props.headers.map((header, index) => (
         <Fragment key={header.title}>
           {header.link ? (
-            <Styled.PageLink
-              key={header.title}
-              to={header.link}
-              $selected={false}
-            >
-              {header.title}
-            </Styled.PageLink>
+            props.isStorybook !== true ? (
+              <Styled.PageLink
+                key={header.title}
+                to={header.link}
+                $selected={false}
+              >
+                {header.title}
+              </Styled.PageLink>
+            ) : (
+              <Styled.PageLink key={header.title} $selected={false}>
+                {header.title}
+              </Styled.PageLink>
+            )
           ) : (
             <Styled.PageTitle key={header.title} $selected={true}>
               {header.title}
@@ -36,7 +41,7 @@ export default function Headers(props: Props) {
         </Fragment>
       ))}
       {props.isLogged !== false ? (
-        <Styled.LogoutButton onClick={() => logout()}>
+        <Styled.LogoutButton onClick={() => props.logout()}>
           {"Logout"}
         </Styled.LogoutButton>
       ) : null}

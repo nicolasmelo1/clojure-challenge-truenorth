@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import * as z from "zod";
 import { toast } from "react-toastify";
 
-import { useMutate, MutationTypes } from "../../utils";
+import { useMutate, MutationTypes } from "../../core";
 import { router } from "../../../routes";
 
 const registerSchema = z.object({

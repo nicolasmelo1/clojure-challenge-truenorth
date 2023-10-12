@@ -2,10 +2,10 @@ import { Fragment, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-import { Selector } from "../../../utils";
+import { Selector } from "../../../core";
 import * as Styled from "./Filter.styles";
-import { useClickOutside } from "../../../utils/hooks";
-import { uuid } from "../../../utils/utils";
+import { useClickOutside } from "../../../core/hooks";
+import { uuid } from "../../../core/utils";
 
 type Props = {
   columns: {

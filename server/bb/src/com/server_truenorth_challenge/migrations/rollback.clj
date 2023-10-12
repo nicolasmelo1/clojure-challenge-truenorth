@@ -21,7 +21,8 @@
     (filter #(and (str/includes? (.getName %) ".down.")
                   (contains? applied-migrations-down-file-name (.getName %))) (get-files-sorted-and-until-if-defined files until))))
 
-(defn execute-down-migration-and-remove [statements file-name db migrations-table-name]
+(defn execute-down-migration-and-remove
+  [statements file-name db migrations-table-name]
   (println (str "Applying DOWN migrations of file " file-name))
   (try
     (pg/with-transaction [tx/tx db]

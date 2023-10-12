@@ -3,12 +3,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 
 import { router } from "./routes";
-import { GlobalProvider } from "./features/utils/";
-import { api } from "./features/utils";
+import { GlobalProvider } from "./features/core";
+import { api } from "./features/core";
 
 const client = new QueryClient();
 
-console.log(import.meta.env.VITE_SEVER_HOST);
 api.setApiPath(import.meta.env.VITE_SEVER_HOST || "http://localhost:8080");
 api.setPrefix("v1");
 api.setSecureStorage(localStorage);

@@ -1,4 +1,4 @@
-import { api } from "../../utils";
+import { api } from "../../core";
 
 export default function useRemove() {
   return (id: number) =>

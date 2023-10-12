@@ -9,8 +9,9 @@ import {
 } from "react";
 
 import GlobalContexts from "./index";
-import api from "../../utils/utils/api";
+import api from "../utils/api";
 import { TokensType } from "../utils/api/types";
+import { router } from "../../../routes";
 
 type State = {
   isLoadingAuth: boolean;
@@ -82,6 +83,7 @@ export function AuthenticationProvider(props: PropsWithChildren<unknown>) {
           queryClient.invalidateQueries(),
         ]);
         setIsAuthenticated(false);
+        router.navigate({ to: "/login" });
       }
       isHandlingUnauthenticated.current = false;
     }

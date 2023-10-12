@@ -1,4 +1,4 @@
-# TrueNorth Coding Challenge LoanPro
+# TrueNorth Coding Challenge LoanPro (Backend)
 
 Author: Nicolas Leal
 
@@ -17,7 +17,8 @@ purpose).
 
 ## Solution
 
-This project is the backend for the calculator. It is a REST API (ONLY) that provides the calculator functionality.
+**LIVE DEMO**: (Live Demo Link)[https://truenorth-challenge-be2.fly.dev]
+This project is the backend for the calculator. It is a REST API (ONLY) that provides the calculator functionality as well as the user management tooling.
 
 #### Technologies used
 
@@ -144,6 +145,7 @@ Filter `values` and `fields` are related together, how can we validate that you 
 
 A few things:
 
+- Add redis for access and refresh tokens invalidation.
 - Adding [typedclojure](https://github.com/typedclojure/typedclojure). I like strict typing system now. I was a fan of dynamic typing but as i started working with typed languages i started enjoying stuff typed.
 - Disabling some Biff related stuff that i didn't use like XTDB.
 - Better testing of everything. I would like to do pretty much integration tests, but i found it hard to do in clojure.

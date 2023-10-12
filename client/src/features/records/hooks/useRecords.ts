@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { AuthenticationContext, api } from "../../utils";
+import { AuthenticationContext, api } from "../../core";
 
 export default function useRecords() {
   const [data, setData] = useState<

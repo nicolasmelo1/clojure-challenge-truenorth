@@ -6,9 +6,9 @@ import {
   faSortDown,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { useClickOutside } from "../../../utils/hooks";
+import { useClickOutside } from "../../../core/hooks";
 import * as Styled from "./Sort.styles";
-import { Selector } from "../../../utils";
+import { Selector } from "../../../core";
 
 type Props = {
   columns: {

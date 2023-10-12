@@ -6,7 +6,7 @@ import {
   useMutate,
   MutationTypes,
   api,
-} from "../../utils";
+} from "../../core";
 import { router } from "../../../routes";
 
 const loginSchema = z.object({

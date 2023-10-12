@@ -16,7 +16,7 @@ import {
   convertNumberToMoney,
   convertIsoDateToDate,
 } from "../../utils";
-import { Headers } from "../../../utils";
+import { Headers } from "../../../core";
 
 const columns: ColumnDef<{
   operation_type: string;

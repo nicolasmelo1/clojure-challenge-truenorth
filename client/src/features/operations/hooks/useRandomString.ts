@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { MutationTypes, useMutate } from "../../utils";
+import { MutationTypes, useMutate } from "../../core";
 
 const randomStringSchema = z.object({
   type: z.literal("random-string"),

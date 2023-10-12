@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import { Link } from "@tanstack/react-router";
+import { forwardRef } from "react";
+import { Link, LinkComponent } from "@tanstack/react-router";
+import { AnyComponent } from "styled-components/dist/types";
 
 export const TitleContainer = styled.div`
   display: flex;
@@ -38,7 +40,11 @@ export const PageTitle = styled.h1<{ $selected: boolean }>`
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const PageLink = styled(Link as any)<{ $selected: boolean }>`
+export const PageLink = styled(
+  forwardRef<LinkComponent | AnyComponent, any>((props, ref) =>
+    props.to ? <Link {...props} ref={ref} /> : <a {...props} ref={ref} />
+  )
+)<{ $selected: boolean }>`
   font-family: "Arial";
   font-size: 18px;
   text-align: center;
@@ -47,6 +53,7 @@ export const PageLink = styled(Link as any)<{ $selected: boolean }>`
   justify-content: center;
   align-items: center;
   display: flex;
+  cursor: pointer;
   user-select: none;
   color: ${({ $selected }) => ($selected ? "black" : "#c2c2c2c2")};
   border: none;

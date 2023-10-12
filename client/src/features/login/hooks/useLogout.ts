@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import { router } from "../../../routes";
-import { api, AuthenticationContext } from "../../utils";
+import { api, AuthenticationContext } from "../../core";
 
 export default function useLogout() {
   const { setIsAuthenticated } = useContext(AuthenticationContext);

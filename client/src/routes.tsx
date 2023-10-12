@@ -8,7 +8,7 @@ import {
 import Root from "./App";
 import { recordsRoute } from "./features/records/routes";
 import { loginRoutes, registerRoutes } from "./features/login/routes";
-import { useAppReady } from "./features/utils";
+import { useAppReady } from "./features/core";
 import { Fragment } from "react";
 
 export const authenticatedRoute = new Route({
