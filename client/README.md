@@ -23,6 +23,7 @@ UI views:
 ## Solution
 
 **LIVE DEMO**: (Live Demo Link)[https://truenorth-challenge-fe.vercel.app/]
+
 **IMPORTANT**: You don't need credentials to login because you can just register a new user.
 
 This is the frontend solution for the coding challenge, it is a React application, created with Vite and deployed to Vercel.
@@ -56,9 +57,8 @@ This is the frontend solution for the coding challenge, it is a React applicatio
 1. Guarantee that you have Node.js installed.
 2. Clone the repository.
 3. Run `pnpm install` to install all the dependencies.
-4. Start the backend server.
-5. Run `pnpm run storybook` to start the development server.
-6. Open your browser and go to `http://localhost:5173/`.
+4. Run `pnpm run storybook` to start the development server.
+5. Open your browser and go to `http://localhost:6006/`.
 
 #### How to run the project in Vercel or any other platform
 
