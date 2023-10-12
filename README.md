@@ -6,3 +6,23 @@ So you might be wondering. Hey, what is the documentation? I choose a monorepo f
 
 `Client` is the frontend application
 `Server` is the backend application
+
+### How to run all applications at once
+
+1. Start docker compose
+
+```shell
+$ docker compose up
+```
+
+2. Install the dependencies
+
+```shell
+$ pnpm i
+```
+
+3. Run the application
+
+```shell
+$ pnpm run dev
+```
