@@ -19,7 +19,7 @@
   [handler jwt-token ctx token-type]
   (if-let [{:keys [user-id type]} (biff/jwt-decrypt jwt-token settings/jwt-secret)]
     (if (= type token-type)
-      (if-let [user (auth-services/user-get-by-id settings/db user-id)]
+      (if-let [user (auth-services/user-get-by-id user-id)]
         (handler (assoc ctx :user user))
         {:status 401
          :body {:jwt-error ["User does not exist or not active"]}})

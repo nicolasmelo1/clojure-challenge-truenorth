@@ -1,20 +1,21 @@
 (ns com.server-truenorth-challenge.operations.repository
   (:require
    [honey.sql :as sql]
+   [com.server-truenorth-challenge.settings :as settings]
    [next.jdbc :as jdbc]))
 
 (defn operations-get-all
-  [database]
+  []
   (jdbc/execute!
-   database
+   settings/db
    (sql/format
     {:select [:id :type :cost]
      :from [:operations]})))
 
 (defn records-get-last-record-of-user
-  [database user-id]
+  [user-id]
   (jdbc/execute!
-   database
+   settings/db
    (sql/format
     {:select [:user-balance]
      :from [:records]
@@ -23,8 +24,8 @@
      :limit 1})))
 
 (defn records-bulk-insert
-  [database user-id operations]
+  [user-id operations]
   (jdbc/execute!
-   database (sql/format {:insert-into :records
-                         :columns [:user-id :operation-id :amount :user-balance :operation-response]
-                         :values (map (fn [operation] [user-id (:operation-id operation) (:amount operation) (:user-balance operation) (:result operation)]) (into [] operations))})))
+   settings/db (sql/format {:insert-into :records
+                            :columns [:user-id :operation-id :amount :user-balance :operation-response]
+                            :values (map (fn [operation] [user-id (:operation-id operation) (:amount operation) (:user-balance operation) (:result operation)]) (into [] operations))})))

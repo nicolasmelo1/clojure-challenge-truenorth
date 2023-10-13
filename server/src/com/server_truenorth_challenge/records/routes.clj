@@ -3,8 +3,7 @@
    [com.server-truenorth-challenge.records.schemas :as records-schemas]
    [com.server-truenorth-challenge.records.services :as records-services]
    [com.server-truenorth-challenge.core.middlewares :as core-middlewares]
-   [com.server-truenorth-challenge.auth.middlewares :as auth-middlewares]
-   [com.server-truenorth-challenge.settings :as settings]))
+   [com.server-truenorth-challenge.auth.middlewares :as auth-middlewares]))
 
 (def list-records
   ["" {:middleware [auth-middlewares/jwt-authentication-middleware
@@ -14,7 +13,6 @@
                       [:sorting-fields :sorting-orders]])]
        :get (fn [{:keys [query-params user] :as _}]
               {:body (records-services/get-records
-                      settings/db
                       (:users/id user)
                       (:sorting-fields query-params)
                       (:sorting-orders query-params)
@@ -27,5 +25,5 @@
 (def remove-record
   ["/:id" {:middleware [auth-middlewares/jwt-authentication-middleware]
            :delete (fn [{:keys [user path-params] :as _}]
-                     (records-services/remove-record settings/db (:users/id user) (:id path-params))
+                     (records-services/remove-record (:users/id user) (:id path-params))
                      {:body {:message "Ok"}})}])

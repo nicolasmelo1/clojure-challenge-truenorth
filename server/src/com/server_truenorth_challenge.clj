@@ -11,7 +11,6 @@
             [clojure.tools.namespace.repl :as tn-repl]
             [malli.core :as malc]
             [malli.registry :as malr]
-            [ring.middleware.cors :as cors]
             [nrepl.cmdline :as nrepl-cmd]))
 
 (def plugins
@@ -41,7 +40,7 @@
   (biff/add-libs)
   (biff/eval-files! ctx)
   (generate-assets! ctx)
-  (test/run-tests 'com.server-truenorth-challenge.core.test)) ;#"com.server-truenorth-challenge.*.test.*"))
+  (test/run-all-tests #"com.server-truenorth-challenge.*.test.*"))
 
 (def malli-opts
   {:registry (malr/composite-registry
