@@ -18,6 +18,26 @@
          :port (get-env-variable "DB_PORT" str "5432")
          :sslmode (get-env-variable "DB_SSLMODE" str "disable")})
 
+(defn migrate-with
+  [db-user db-name db-pass db-host db-port]
+  (println "Running migrations for " db-name " database.")
+  (migrate/migrate {:dbtype "postgresql"
+                    :user db-user
+                    :dbname db-name
+                    :password db-pass
+                    :host db-host
+                    :port (Integer/parseInt db-port)} migrations-location migrations-table-name))
+
+(defn rollback-with
+  [db-user db-name db-pass db-host db-port]
+  (println "Rolling back for " db-name " database.")
+  (rollback/rollback {:dbtype "postgresql"
+                      :user db-user
+                      :dbname db-name
+                      :password db-pass
+                      :host db-host
+                      :port (Integer/parseInt db-port)} migrations-location migrations-table-name {:until nil}))
+
 (defn migrate
   "This will run all of your pending migrations. This works similarly to Migratus library. But i needed to do it by hand."
   []

@@ -28,10 +28,10 @@
     **:username (str)**: The username of the user\n
     **:password (str)**: The unhashed password of the user
   "
-  [username password]
+  [database username password]
   (let [hashed-password (-> (hash/sha256 password)
                             (codecs/bytes->hex))]
-    (if-let [user (-> (auth-repository/users-get-by-username-and-password username hashed-password) first)]
+    (if-let [user (-> (auth-repository/users-get-by-username-and-password database username hashed-password) first)]
       {:is-valid true :data (create-tokens (:users/id user))}
       {:is-valid false :data nil})))
 
@@ -41,8 +41,8 @@
    
    ### Args:
     **:id (int)**: The id of the user to fetch the data for"
-  [id]
-  (-> (auth-repository/user-get-by-id id) first))
+  [database id]
+  (-> (auth-repository/user-get-by-id database id) first))
 
 (defn refresh-the-tokens
   "Just refresh the tokens using the refresh-token provided.\n
@@ -53,7 +53,7 @@
   (create-tokens user-id))
 
 (defn create-user
-  [username password]
+  [database username password]
   (let [hashed-password (-> (hash/sha256 password)
                             (codecs/bytes->hex))]
-    (auth-repository/users-insert-new-with-username-and-password username hashed-password)))
+    (auth-repository/users-insert-new-with-username-and-password database username hashed-password)))

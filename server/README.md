@@ -65,6 +65,8 @@ $ bb run migrate
 $ bb run dev
 ```
 
+**The tests spin up once you run the server, you should see a `Ran 18 tests containing 45 assertions.` on your terminal or you can programatically start it. Integration tests that tests more of the business logic are defined on `core/test.clj`**
+
 #### How to run the project in Fly.io or any other platform
 
 Just run the project using the Dockerfile provided in the root of the project.

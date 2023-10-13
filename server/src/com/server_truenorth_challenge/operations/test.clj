@@ -3,6 +3,7 @@
    [com.server-truenorth-challenge.operations.services.lexer :as lexer]
    [com.server-truenorth-challenge.operations.services.parser :as parser]
    [com.server-truenorth-challenge.operations.services.interpreter :as interpreter]
+   [com.server-truenorth-challenge.operations.services.services :as operations-services]
    [clojure.test :as test]))
 
 (def costs {:addition {:cost 0.33493, :id 1}
@@ -48,3 +49,34 @@
         {:keys [abstract-syntax-tree]} (parser/parse lexer)
         {:keys [node]} (interpreter/evaluate abstract-syntax-tree 100)]
     (test/is (= 3.0 node))))
+
+(defn new-operations [database user-id]
+  (let [random-string-callback (fn [] "random-string")
+        operations [{:operation-type "expression"
+                     :expression "1 + 1"}
+                    {:operation-type "expression"
+                     :expression  "2 * 2 + 3"}
+                    {:operation-type "expression"
+                     :expression "4 * 4"}
+                    {:operation-type "expression"
+                     :expression "4 +"}
+                    {:operation-type "expression"
+                     :expression "4/2"}
+                    {:operation-type "random-string"
+                     :expression nil}]
+        results (map #(operations-services/new-operation database (:operation-type %) (:expression %) user-id random-string-callback) operations)
+        formatted-results (into [] results)]
+    [(test/deftest new-operations-test
+       (simple-interpreter-parser-and-lexer-test)
+       (complex-interpreter-parser-and-lexer-test)
+       (square-root)
+       (unary-minus)
+       (division)
+       (test/is (= (-> formatted-results first :is-valid) true))
+       (test/is (= (-> formatted-results first :data :result) 2.0))
+       (test/is (= (-> formatted-results second :is-valid) true))
+       (test/is (= (-> formatted-results second :data :result) 7.0))
+       (test/is (= (-> formatted-results (nth 3) :is-valid) false))
+       (test/is (= (-> formatted-results (nth 3) :reason) :invalid-syntax))
+       (test/is (= (count formatted-results) 6)))
+     formatted-results]))

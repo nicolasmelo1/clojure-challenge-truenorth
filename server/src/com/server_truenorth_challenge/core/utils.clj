@@ -1,6 +1,12 @@
 (ns com.server-truenorth-challenge.core.utils
   (:require [clojure.string :as str]))
 
+
+(defn get-env-variable [env-to-get func-to-parse default-value]
+  (or (some-> (System/getenv env-to-get)
+              func-to-parse)
+      default-value))
+
 (defn- nicely-format-error-messages
   "This will format the error messages so it is flattened and will look identical to [\"Mallis\"](https://github.com/metosin/malli) library\n
    This is important because for the frontend it should not have any distinction. It would be bad to try to parse different formats of error messages.

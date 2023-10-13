@@ -11,6 +11,8 @@
          clean              com.biffweb.tasks/clean
          generate-secrets   com.biffweb.tasks/generate-secrets
          migrate            com.server-truenorth-challenge.tasks/migrate
+         migrate-with       com.server-truenorth-challenge.tasks/migrate-with
+         rollback-with      com.server-truenorth-challenge.tasks/rollback-with
          rollback           com.server-truenorth-challenge.tasks/rollback
          rollback-until     com.server-truenorth-challenge.tasks/rollback-until
          makemigration      com.server-truenorth-challenge.tasks/makemigration

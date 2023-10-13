@@ -2,8 +2,7 @@
   (:require
    [honey.sql :as sql]
    [clojure.string :as str]
-   [next.jdbc :as jdbc]
-   [com.server-truenorth-challenge.settings :as settings]))
+   [next.jdbc :as jdbc]))
 
 (defn- cast-value-by-key
   [key value]
@@ -28,7 +27,7 @@
         [:= key (cast-value-by-key key value)]))
 
 (defn records-get-all
-  [user-id sort filter search limit offset]
+  [database user-id sort filter search limit offset]
   (let [base-query {:select [[:records.id :id]
                              [:operations.type :operation-type]
                              :amount
@@ -56,8 +55,8 @@
         query-data-without-limit-order-by-join-and-offset (dissoc formatted-query-data :limit :offset :order-by :join-by)
         query-data-without-empty-order-by (if (-> (:order-by formatted-query-data) (count) (< 1)) (dissoc formatted-query-data :order-by) formatted-query-data)
         merged-with-base-query (merge base-query query-data-without-empty-order-by)]
-    {:total (jdbc/execute! settings/db (sql/format {:select [[[:count :*] :total]] :from [[(assoc (merge base-query query-data-without-limit-order-by-join-and-offset) :select [[:records.id :id]]) :sub]]}))
-     :records (jdbc/execute! settings/db (sql/format  merged-with-base-query))}))
+    {:total (jdbc/execute! database (sql/format {:select [[[:count :*] :total]] :from [[(assoc (merge base-query query-data-without-limit-order-by-join-and-offset) :select [[:records.id :id]]) :sub]]}))
+     :records (jdbc/execute! database (sql/format  merged-with-base-query))}))
 
 (defn make-timestamp
   "makes iso8601 timestamp manually
@@ -70,9 +69,9 @@
     (.format df (new java.util.Date))))
 
 (defn records-remove-record-by-id-and-user-id
-  [id user-id]
+  [database id user-id]
   (jdbc/execute!
-   settings/db
+   database
    (sql/format
     {:update :records
      :set {:deleted_at [:cast (make-timestamp) :timestamp]}
